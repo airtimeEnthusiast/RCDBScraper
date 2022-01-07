@@ -24,13 +24,15 @@ def parse_state_page_tester():
   name = "Nevada"
   response = requests.get(link)
   soup = bs(response.text, "html.parser")
+  extant_ref = soup.find("body").find("table").find_all("tr")
+  print(extant_ref)
 
 
 #parse the pages found on the US List of coasters on RCDB 
 def parse_pages():
-    us_url = "https://rcdb.com/location.htm?id=59" #List of Coasters in the US
+    us_url = "https://rcdb.com/location.htm?id=59"#List of Coasters in the US
     response = requests.get(us_url)                           #Create the response 
-    soup = bs(response.text, "html.parser")             #Parse the response
+    soup = bs(response.text, "html.parser")              #Parse the response
     states_table = soup.find("body").find("div", class_="stdtbl cen").find("table").find("tbody").find_all("tr")  #Find the table of states
     for state in states_table:                #Parse each state
       table_data = state.find_all("td") #State table data sections
@@ -44,7 +46,7 @@ def parse_pages():
 
 def main():
   #print("Heelo")
-  parse_pages()
+  parse_state_page_tester()
 
 
 if __name__ == '__main__':
