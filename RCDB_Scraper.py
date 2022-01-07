@@ -57,13 +57,16 @@ class RCDB_Parser(enum.Enum):
       elif Status == "In Business":
         pass
 
-  def parse_pages():
+
+def parse_pages():
     us_url = "https://rcdb.com/location.htm?id=59"
-    soup = bs(response.content, "html.parser")
     response = requests.get(us_url)
-    meta = soup.find("body").find("div",{"id": "stdtbl cen"})
-    print(list(meta.decendants))
-    
+    soup = bs(response.text, "html.parser")
+    states_table = soup.find("body").find("div", class_="stdtbl cen").find("table").find("tbody").find_all("tr")
+    for state in states_table:
+      table_data = state.find_all("td")
+      ref = table_data[0].find("a")
+      print(ref)
 
     
     
