@@ -9,19 +9,19 @@ from bs4 import BeautifulSoup as bs
 import enum
 
 #parse the coasters found on each state page
-def parse_state_page(link,name):
-  print("Parse " + name + " at "  + link)
-  response = requests.get(link)
-  soup = bs(response.text,"html.parser")
-  extant_ref = soup.find("body").find("table", id_="counts")
-  time.sleep(5)
-  print(extant_ref)
-  time.sleep(5)
+#def parse_state_page(link,name):
+  #print("Parse " + name + " at "  + link)
+  #response = requests.get(link)
+  #soup = bs(response.text,"html.parser")
+  #extant_ref = soup.find("body").find("table", id_="counts")
+  #time.sleep(5)
+  #print(extant_ref)
+  #time.sleep(5)
 
 
 #test the parse_state_page
 def parse_state_page_tester():
-  link = "https://rcdb.com/location.htm?id=13833"
+  link = "https://rcdb.com/location.htm?id=13833" #State page with the number of extant coasters, defunct
   name = "Nevada"
   response = requests.get(link)
   soup = bs(response.text, "html.parser")
@@ -46,7 +46,6 @@ def parse_extant_coasters_tester():
     time.sleep(5)
     
 
-
 #test the parse coaster stats page
 def parse_coaster_tester():
   link = "https://rcdb.com/103.htm" #The Desperado In Primn
@@ -54,16 +53,29 @@ def parse_coaster_tester():
   soup = bs(response.text, "html.parser")
   stat_sections = soup.find("body").find_all("section")
 
-  #getting the name
-  Name = stat_sections[0].select_one("div:nth-child(1)").div.div.h1.get_text()
+  ##getting the name##
+  # = stat_sections[0].select_one("div:nth-child(1)").div.div.h1.get_text()
 
-  #getting the meta data of the coaster (location)
-  metas = stat_sections[0].select_one("div:nth-child(1)").div.div.find_all("a")
-  Park = metas[0].get_text()
-  City = metas[1].get_text()
-  State = metas[2].get_text()
-  Country = metas[3].get_text()
+  ##getting the meta data of the coaster (location)##
+  #metas = stat_sections[0].select_one("div:nth-child(1)").div.div.find_all("a")
+  #Park = metas[0].get_text()
+  #City = metas[1].get_text()
+  #State = metas[2].get_text()
+  #Country = metas[3].get_text()
+
+  ##get operational status <p>##
+  #status_type =  stat_sections[0].select_one("div:nth-child(1)").div.p.a.get_text()
+  #status_date =  stat_sections[0].select_one("div:nth-child(1)").div.p.time["datetime"]
   
+  #get type <ul class="ll"
+  #Types = stat_sections[0].select_one("div:nth-child(1)").div.ul.find_all("li")
+  #Material = Types[1].a.get_text()
+  #Positioning = Types[2].a.get_text()
+  #Thrill  = Types[3].a.get_text()
+
+  ##get make and model <div class="scroll"> <p> <a>##
+
+  ##get track stats <section>[1] <table> <tbody>## 
 
 #parse the pages found on the US List of coasters on RCDB 
 def parse_parent_pages():
