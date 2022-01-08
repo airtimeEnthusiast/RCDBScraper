@@ -74,8 +74,14 @@ def parse_coaster_tester():
   #Thrill  = Types[3].a.get_text()
 
   ##get make and model <div class="scroll"> <p> <a>##
+  #Types = stat_sections[0].select_one("div:nth-child(1)").div.find("div",class_="scroll").find("p").find_all("a")
+  #Make = Types[0].get_text()
+  #Model = Types[2].get_text()
+  
 
-  ##get track stats <section>[1] <table> <tbody>## 
+  ##get track stats <section>[1] <table> <tbody>##
+  metas = stat_sections[1].find("table").find("tbody").find_all("tr")
+  print(metas)
 
 #parse the pages found on the US List of coasters on RCDB 
 def parse_parent_pages():
