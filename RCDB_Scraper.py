@@ -48,40 +48,107 @@ def parse_extant_coasters_tester():
 
 #test the parse coaster stats page
 def parse_coaster_tester():
-  link = "https://rcdb.com/103.htm" #The Desperado In Primn
+
+  Name = None
+  Park = None
+  City = None
+  State = None
+  Country = None
+  Status_type = None
+  Status_date = None
+  Material = None
+  Positioning = None
+  Thrill = None
+  Make = None
+  Model = None
+  Length = None
+  Height = None
+  Drop = None
+  Speed = None
+  Inversions = None
+  VerticalAngle = None
+  Duration = None
+  GForce = None
+
+  
+  #link = "https://rcdb.com/103.htm" #The Desperado In Primn
+  link = "https://rcdb.com/3344.htm"
   response = requests.get(link)
   soup = bs(response.text, "html.parser")
   stat_sections = soup.find("body").find_all("section")
 
   ##getting the name##
-  # = stat_sections[0].select_one("div:nth-child(1)").div.div.h1.get_text()
-
+  Name = stat_sections[0].select_one("div:nth-child(1)").div.div.h1.get_text()
+  
   ##getting the meta data of the coaster (location)##
-  #metas = stat_sections[0].select_one("div:nth-child(1)").div.div.find_all("a")
-  #Park = metas[0].get_text()
-  #City = metas[1].get_text()
-  #State = metas[2].get_text()
-  #Country = metas[3].get_text()
-
-  ##get operational status <p>##
-  #status_type =  stat_sections[0].select_one("div:nth-child(1)").div.p.a.get_text()
-  #status_date =  stat_sections[0].select_one("div:nth-child(1)").div.p.time["datetime"]
+  metas = stat_sections[0].select_one("div:nth-child(1)").div.div.find_all("a")
+  Park = metas[0].get_text()
+  City = metas[1].get_text()
+  State = metas[2].get_text()
+  Country = metas[3].get_text()
+  
+  ##get operational status <p>  Not Quite working for this page: https://rcdb.com/3344.htm##
+  Status_type =  stat_sections[0].select_one("div:nth-child(1)").div.p.a.get_text()
+  Status_date =  stat_sections[0].select_one("div:nth-child(1)").div.p.time["datetime"]
   
   #get type <ul class="ll"
-  #Types = stat_sections[0].select_one("div:nth-child(1)").div.ul.find_all("li")
-  #Material = Types[1].a.get_text()
-  #Positioning = Types[2].a.get_text()
-  #Thrill  = Types[3].a.get_text()
+  Types = stat_sections[0].select_one("div:nth-child(1)").div.ul.find_all("li")
+  Material = Types[1].a.get_text()
+  Positioning = Types[2].a.get_text()
+  Thrill  = Types[3].a.get_text()
 
   ##get make and model <div class="scroll"> <p> <a>##
-  #Types = stat_sections[0].select_one("div:nth-child(1)").div.find("div",class_="scroll").find("p").find_all("a")
-  #Make = Types[0].get_text()
-  #Model = Types[2].get_text()
-  
+  Types = stat_sections[0].select_one("div:nth-child(1)").div.find("div",class_="scroll").find("p").find_all("a")
+  Make = Types[0].get_text()
+  Model = Types[2].get_text()
 
   ##get track stats <section>[1] <table> <tbody>##
-  metas = stat_sections[1].find("table").find("tbody").find_all("tr")
-  print(metas)
+  ## https://github.com/willcliffy/RCDB-Scraper/blob/main/scraper.py
+  ## Lines 85-105 were borrowed from this file
+
+  specs = list(soup.find('table', {'class' : 'stat-tbl'}).strings)
+  for i in range (len(specs)):
+    if specs[i] == 'Length':
+      Length = specs[i + 1]
+    elif specs[i] == 'Height':
+      Height = specs[i + 1]
+    elif specs[i] == 'Drop':
+      Drop = specs[i + 1]
+    elif specs[i] == 'Speed':
+      Speed = specs[i + 1]
+    elif specs[i] == 'Inversions':
+      Inversions = specs[i + 1]
+    elif specs[i] == 'Vertical Angle':
+      VerticalAngle = specs[i + 1]
+    elif specs[i] == 'Duration':
+      Duration = specs[i + 1]
+    elif specs[i] == 'G-Force':
+      GForce = specs[i + 1]
+    else:
+        continue
+    i += 1
+      
+  print(Name)
+  print(Park)
+  print(City)
+  print(State)
+  print(Country)
+  print(Status_type)
+  print(Status_date)
+  print(Material)
+  print(Positioning)
+  print(Thrill)
+  print(Make)
+  print(Model)
+  print(Length)
+  print(Height)
+  print(Drop)
+  print(Speed)
+  print(Inversions)
+  print(VerticalAngle)
+  print(Duration)
+  print(GForce)
+    
 
 #parse the pages found on the US List of coasters on RCDB 
 def parse_parent_pages():
