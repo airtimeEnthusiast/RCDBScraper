@@ -55,7 +55,7 @@ def parse_coaster_tester():
   State = None
   Country = None
   Status_type = None
-  Status_date = None
+  #Status_date = None
   Material = None
   Positioning = None
   Thrill = None
@@ -89,7 +89,7 @@ def parse_coaster_tester():
   
   ##get operational status <p>  Not Quite working for this page: https://rcdb.com/3344.htm##
   Status_type =  stat_sections[0].select_one("div:nth-child(1)").div.p.a.get_text()
-  Status_date =  stat_sections[0].select_one("div:nth-child(1)").div.p.time["datetime"]
+  #Status_date =  stat_sections[0].select_one("div:nth-child(1)").div.p.time["datetime"]
   
   #get type <ul class="ll"
   Types = stat_sections[0].select_one("div:nth-child(1)").div.ul.find_all("li")
@@ -104,8 +104,7 @@ def parse_coaster_tester():
 
   ##get track stats <section>[1] <table> <tbody>##
   ## https://github.com/willcliffy/RCDB-Scraper/blob/main/scraper.py
-  ## Lines 85-105 were borrowed from this file
-
+  ## Lines 85-105 were borrowed from this file for this section since I had trouble parsing this tbody
   specs = list(soup.find('table', {'class' : 'stat-tbl'}).strings)
   for i in range (len(specs)):
     if specs[i] == 'Length':
@@ -134,7 +133,7 @@ def parse_coaster_tester():
   print(State)
   print(Country)
   print(Status_type)
-  print(Status_date)
+  #print(Status_date)
   print(Material)
   print(Positioning)
   print(Thrill)
@@ -150,29 +149,43 @@ def parse_coaster_tester():
   print(GForce)
     
 
-#parse the pages found on the US List of coasters on RCDB 
-def parse_parent_pages():
+#parse the pages found on the US List of coasters on RCDB tester
+def parse_parent_pages_tester():
     us_url = "https://rcdb.com/location.htm?id=59"#List of Coasters in the US
     response = requests.get(us_url)                           #Create the response 
     soup = bs(response.text, "html.parser")              #Parse the response
     states_table = soup.find("body").find("div", class_="stdtbl cen").find("table").find("tbody").find_all("tr")  #Find the table of states
-    time.sleep(5)
     for state in states_table:                #Parse each state
       table_data = state.find_all("td") #State table data sections
-      time.sleep(5)
       td = table_data[0].find("a")          #State name and link section
       ref = "https://rcdb.com" + td.get('href') #Link reference
-      time.sleep(5)
       name = td.get_text()                        #State name
-      print("Parsing the state of " + ref)
-      parse_state_page(ref,name)
-      time.sleep(10)
+      print("Parsing the state of " + name +  " at " + ref)
+
+def parse_state_page():
+  us_url = "https://rcdb.com/location.htm?id=59"#List of Coasters in the US
+  response = requests.get(us_url)                           #Create the response 
+  soup = bs(response.text, "html.parser")              #Parse the response
+  states_table = soup.find("body").find("div", class_="stdtbl cen").find("table").find("tbody").find_all("tr")  #Find the table of states
+  for state in states_table:                #Parse each state
+    table_data = state.find_all("td") #State table data sections
+    td = table_data[0].find("a")          #State name and link section
+    ref = "https://rcdb.com" + td.get('href') #Link reference
+    name = td.get_text()                        #State name
+    print("Parsing the state of " + name +  " at " + ref)
 
 def main():
   #print("Heelo")
   #parse_extant_coasters_tester()
   #parse_state_page_tester()
-  parse_coaster_tester()
+  #parse_coaster_tester()
+  data = [["ID","Name","Park","City","State","Country","Status","Material","Seating","Thrill","Make","Model","Length","Height","Drop","Speed","Inversions","VerticalAngle","Duration","G-Force"]]
+  #For Each State
+  parse_state_page()
+    #For Each Coaster
+      #Get Each Coaster and Append to data[[]]
+    
+  
 
 
 if __name__ == '__main__':
