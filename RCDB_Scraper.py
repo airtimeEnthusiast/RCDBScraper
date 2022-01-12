@@ -250,7 +250,7 @@ def test_oddoties(extant_link):
  coasters_on_page = soup.body.section.find("div", {"class" : "stdtbl rer"}).find("table").find_all("tr") #Find table references of coasters on the next page
  print(str(len(coasters_on_page)) + " coasters on page " + extant_link)
  #num_extants = soup.body.find("table").select_one("tr:nth-child(1)").td.a.get_text()    #Get total number of extisting coasters in the country
- coaster_data_array = [[] for r in range((len(coasters_on_page)))]                                       #Store data in an array
+ coaster_data_array = [[] for r in range((len(coasters_on_page) - 1))]                                       #Store data in an array
  
 
  ##For first coaster data stats##
@@ -260,7 +260,7 @@ def test_oddoties(extant_link):
  #time.sleep(2)
 
  ##Get the next coaster data stats##                                            
- for i in range(22,len(coasters_on_page)):
+ for i in range(2,len(coasters_on_page)):
   if coasters_on_page[i].select_one("td:nth-child(1)").a.get("aria-label") == None:
    print("No picture!!!")
    coaster_link = "https://rcdb.com" + coasters_on_page[i].select_one("td:nth-child(1)").a.get("href")    #Next coaster link
@@ -269,7 +269,9 @@ def test_oddoties(extant_link):
   print("Getting the next coaster: " + str(i) + " at " + coaster_link)
   coaster_data_array[i - 1] = Parser.parse_coaster(coaster_link)                   #Get the next coaster data stats                                            
   print(coaster_data_array[i - 1])
-  _ = coaster_data_array
+  col_names = ['Name','Park','City','State','Country','Status','Material','Seating','Thrill','Make','Model','Length','Height','Drop','Speed','Inversions','VerticalAngle','Duration','G-Force']
+  _ = pd.DataFrame(coaster_data_array,columns = col_names)
+ # _.set_axis(col_names, axis = 1)
   #time.sleep(2)
  return _
  
@@ -284,13 +286,13 @@ def main():
  extant_link2 = "https://rcdb.com/r.htm?page=4&ot=2&ol=59&ex"
  frame = [None] * 2
  frame[0] = test_oddoties(extant_link1)
- #frame[1] = test_oddoties(extant_link2)
-# data_frame = pd.concat(frame)
- col_names = ['Name','Park','City','State','Country','Status','Material','Seating','Thrill','Make','Model','Length','Height','Drop','Speed','Inversions','VerticalAngle','Duration','G-Force']
- data_frame = pd.DataFrame(frame[0],columns = col_names)
- #data_frame.set_axis(col_names,axis = 1)
+ frame[1] = test_oddoties(extant_link2)
+ data_frame = pd.concat(frame)
+ #col_names = ['Name','Park','City','State','Country','Status','Material','Seating','Thrill','Make','Model','Length','Height','Drop','Speed','Inversions','VerticalAngle','Duration','G-Force']
+ #data_frame = frame[0]
+ #data_frame.set_axis(axis = 1)
  #data_frame.rename(columns = col_names)
- print(data_frame.columns)
+ #print(data_frame.columns)
  data_frame.to_csv("US_Coaster_Stats_2021.csv")
     
     
