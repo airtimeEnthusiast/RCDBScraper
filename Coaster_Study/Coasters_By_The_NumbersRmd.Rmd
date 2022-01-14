@@ -24,16 +24,36 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
+```{r data_set}
+US_Coaster_Stats_2021
 ```
 
-## Including Plots
+## Intro
+Using RCDB's data
 
 You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r Population Percentage}
+column_name = c("State","Percent")
+topStates = table(US_Coaster_Stats_2021$State)
+topStates = as.data.frame(topStates)
+colnames(topStates)<-column_name
+topStates = top_n(topStates,10,Percent)
+topSum <- sum(topStates$Percent)
+for (state in topStates$Percent){
+  percentages <- round(((topStates$Percent/(topSum))*100.0),digits=0)
+}
+
+piePlot <- ggplot(topStates, aes(x = "", y = Percent, fill = State)) +
+  geom_col() + coord_polar(theta = "y", start=0) +  
+  theme(axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid  = element_blank()) + 
+  geom_text(aes(label = paste0((State)," ",(percentages), "%")),
+        position = position_stack(vjust = 0.5), angle = c(-60,-13,20,50,70,-80,-50,-10,25,70)) + 
+  ggtitle("Top 10 States for Coasters by quanitity")
+
+piePlot
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
