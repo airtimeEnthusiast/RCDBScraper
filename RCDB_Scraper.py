@@ -11,7 +11,8 @@ from random import seed
 from random import randint
 
 seed(1)
-#Parser class
+
+#Parser class: Methods are 
 class Parser():
 
  coaster_data_array = [[]]
@@ -29,7 +30,7 @@ class Parser():
     State = None
     Country = None
     Status_type = None
-    #Status_date = None
+    Status_date = None
     Material = None
     Positioning = None
     Thrill = None
@@ -62,7 +63,8 @@ class Parser():
   
     ##get operational status ##
     Status_type =  stat_sections[0].select_one("div:nth-child(1)").div.p.a.get_text()
-    #Status_date =  stat_sections[0].select_one("div:nth-child(1)").div.p.time["datetime"]
+    if stat_sections[0].select_one("div:nth-child(1)").div.p.time != None:
+     Status_date =  stat_sections[0].select_one("div:nth-child(1)").div.p.time["datetime"]
   
     ##get type##
     Types = stat_sections[0].select_one("div:nth-child(1)").div.ul.find_all("li")
@@ -112,8 +114,8 @@ class Parser():
       i += 1
     
     ##Return the data array##
-    _ = [Name,Park,City,State,Country,Status_type,Material,Positioning,Thrill,Make,Model,Length,Height,Drop,Speed,Inversions,VerticalAngle,Duration,GForce]
-    #print(_)
+    _ = [Name,Park,City,State,Country,Status_type,Status_date,Material,Positioning,Thrill,Make,Model,Length,Height,Drop,Speed,Inversions,VerticalAngle,Duration,GForce]
+    print(_)
     return _
 
 
@@ -168,7 +170,7 @@ class Parser():
    coaster_data_array[i] = Parser.parse_coaster(coaster_link)                   #Get the next coaster data stats                                            
    print(coaster_data_array[i])
    time.sleep(20)
-   col_names = ['Name','Park','City','State','Country','Status','Material','Seating','Thrill','Make','Model','Length','Height','Drop','Speed','Inversions','VerticalAngle','Duration','G-Force']
+   col_names = ['Name','Park','City','State','Country','Status','Status Date','Material','Seating','Thrill','Make','Model','Length','Height','Drop','Speed','Inversions','VerticalAngle','Duration','G-Force']
   _ = pd.DataFrame(coaster_data_array, columns = col_names)
   return _
 
@@ -176,7 +178,7 @@ class Parser():
   # Parse through  all the pages of existant coasters     
   ####################################################
  def parse_extant_coasters():
-  columns = ["Name","Park","City","State","Country","Status","Material","Seating","Thrill","Make","Model","Length","Height","Drop","Speed","Inversions","VerticalAngle","Duration","G-Force"]
+  columns = ["Name","Park","City","State","Country","Status","Status Date","Material","Seating","Thrill","Make","Model","Length","Height","Drop","Speed","Inversions","VerticalAngle","Duration","G-Force"]
   link = "https://rcdb.com/r.htm?ot=2&ex&ol=59" #List of existing coasters in the US (page 1)
   response = requests.get(link)                             #Get Response
   soup = bs(response.text,"html.parser")             #Create Responser 
@@ -199,7 +201,7 @@ class Parser():
 def main():
 
  #print(str(int(len("hello"))))
- #Parser.parse_coaster("https://rcdb.com/17035.htm")
+ #Parser.parse_coaster("https://rcdb.com/1530.htm")
  Parser.parse_extant_coasters()     #Parse Coaster List
 
 
@@ -231,7 +233,7 @@ def test_oddoties(extant_link):
   print("Getting the next coaster: " + str(i) + " at " + coaster_link)
   coaster_data_array[i - 1] = Parser.parse_coaster(coaster_link)                   #Get the next coaster data stats                                            
   print(coaster_data_array[i - 1])
-  col_names = ['Name','Park','City','State','Country','Status','Material','Seating','Thrill','Make','Model','Length','Height','Drop','Speed','Inversions','VerticalAngle','Duration','G-Force']
+  col_names = ['Name','Park','City','State','Country','Status','Status Date','Material','Seating','Thrill','Make','Model','Length','Height','Drop','Speed','Inversions','VerticalAngle','Duration','G-Force']
   _ = pd.DataFrame(coaster_data_array,columns = col_names)
  return _
     

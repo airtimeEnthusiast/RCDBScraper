@@ -6,7 +6,6 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-library(learnr)
 library(tidyverse)
 library(ggplot2)
 library(plotly)
@@ -14,18 +13,17 @@ library(htmlwidgets)
 library(plyr)
 library(reshape2)
 library(data.table)
-knitr::opts_chunk$set(echo = FALSE)
+#knitr::opts_chunk$set(echo = FALSE)
 options(warn=-1)
 ```
 
 ## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+This is an R Markdown Test of my new data set from RCDB. 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
 ```{r data_set}
-US_Coaster_Stats_2021
+Stats_2021 <- read.csv("./data/US_Coaster_Stats_2021.csv")
 ```
 
 ## Intro
@@ -35,11 +33,13 @@ You can also embed plots, for example:
 
 ```{r Population Percentage}
 column_name = c("State","Percent")
-topStates = table(US_Coaster_Stats_2021$State)
+topStates = table(Stats_2021$State)
 topStates = as.data.frame(topStates)
 colnames(topStates)<-column_name
 topStates = top_n(topStates,10,Percent)
 topSum <- sum(topStates$Percent)
+
+#Get the percentages of each state
 for (state in topStates$Percent){
   percentages <- round(((topStates$Percent/(topSum))*100.0),digits=0)
 }
@@ -51,9 +51,154 @@ piePlot <- ggplot(topStates, aes(x = "", y = Percent, fill = State)) +
         panel.grid  = element_blank()) + 
   geom_text(aes(label = paste0((State)," ",(percentages), "%")),
         position = position_stack(vjust = 0.5), angle = c(-60,-13,20,50,70,-80,-50,-10,25,70)) + 
-  ggtitle("Top 10 States for Coasters by quanitity")
+  ggtitle("Top 10 States With the Most Coasters")
 
 piePlot
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+1.What are the most popular manufactures? 
+```{r Top 10 Most Popular Manufactures}
+column_name = c("Manufacture", "Installations")
+topManufactures = table(Stats_2021$Make)
+topManufactures = as.data.frame(topManufactures)
+colnames(topManufactures) <- column_name
+topManufactures = top_n(topManufactures, 10, Installations)
+barplot <- ggplot(data = topManufactures, width = 700,height = 700, mapping = aes(x = Manufacture, y = Installations)) + 
+  geom_bar(stat="identity", fill=rainbow(10),position=position_dodge()) + 
+  geom_text(aes(label = paste0((Installations), " installs")), position = position_stack(vjust = 0.5)) + 
+  #theme(axis.text.x=element_blank(),
+        #axis.ticks.x=element_blank()) +
+  coord_flip() + 
+  ggtitle("Top 10 Most Popular Manufactures")
+ggplotly(barplot, tooltip = "text")
+
+
+```
+
+Random Variables of the data set that show the history of coasters.
+The End of the 19th century...
+
+```{r  Population }
+
+WestStates = c("California","Nevada","Arizona","Idaho", "Oregon","Washington", "New Mexico","Colorado" , "Utah", "Montana", "Wyoming")
+EastStates = c("Maine" , "Massachusetts", "Vermont" ,"New Hampshire" ,"Rhode Island","Connecticut", "New York" ,"Delaware" , "Maryland" , "Virginia" , "Pennsylvania" , "New Jersey" ,"Virginia" , "North Carolina" , "South Carolina" , "Georgia" , "Florida")
+Makers = c("Intamin Amusement Rides", "Bolliger & Mabillard")
+
+westCoastIntamin <- nrow(data_frame(Stats_2021) %>% select("Name","State","Make") %>% filter(State %in% WestStates) %>% filter(Make == Makers[1]))
+eastCoastIntamin <- nrow(data_frame(Stats_2021) %>% select("Name","State","Make") %>% filter(State %in% EastStates) %>% filter(Make == Makers[1]))
+westCoastBM <- nrow(data_frame(Stats_2021) %>% select("Name","State","Make") %>% filter(State %in% WestStates) %>% filter(Make == Makers[2]))
+eastCoastBM <-  nrow(data_frame(Stats_2021) %>% select("Name","State","Make") %>% filter(State %in% EastStates) %>% filter(Make == Makers[2]))
+
+maker <- c(rep("Intamin", 2), rep("Bollinger and Mabillard",2))
+region <- rep(c("West", "East"),2)
+value <- c(westCoastIntamin,eastCoastIntamin,westCoastBM,eastCoastBM)
+regionPopulations <- data.frame(maker,region,value)
+
+barplot <- ggplot(regionPopulations,width = 700,height = 700,aes(fill=region,y=value,x=maker)) + geom_bar(position="stack",stat="identity") +
+   geom_text(aes(label = paste0((value),  " installs")), position = position_stack(vjust = 0.5)) + 
+  coord_flip() + 
+  ggtitle("Swiss Maker Installs Between Coasts")
+ggplotly(barplot, tooltip = "text")
+
+
+```
+#Probability of a coaster being made by Intamin given it is on the west coast?
+#A: Made by Intamin
+#B. Located on the west coast
+#P(A | B) = P(A intersect B) / P(B)
+#P(B) = Total
+```{r Prob Intamin}
+probTotal <- westCoastIntamin + eastCoastIntamin + westCoastBM + eastCoastBM
+probWestIntamin <- (westCoastIntamin)/(probTotal)
+probEastIntamin <- (eastCoastIntamin)/(probTotal)
+
+probTotal <- westCoastIntamin + eastCoastIntamin + westCoastBM + eastCoastBM
+probWestBM <- (westCoastBM)/(probTotal)
+probEastBM <- (eastCoastBM)/(probTotal)
+
+maker <- c(rep("Intamin", 2), rep("Bollinger and Mabillard",2))
+region <- rep(c("West", "East"),2)
+value <- c(probWestIntamin,probEastIntamin,probWestBM,probEastBM)
+regionPopulations <- data.frame(region,value)
+
+barplot <- ggplot(regionPopulations,width = 700,height = 700,aes(fill=region,y=value,x=maker)) + geom_bar(position="stack",stat="identity") +
+   geom_text(aes(label = paste0((value))), position = position_stack(vjust = 0.5)) + 
+  ggtitle("Probability Of Swiss Installs Between Coasts")
+
+ggplotly(barplot, tooltip = "text")
+```
+
+
+#Standard Histogram of height
+```{r Height}
+stats <- as.data.frame(Stats_2021) %>% select(Height,Material)
+stats <- na.omit(stats)
+
+sample_steel <- stats %>% filter(Material=="Steel")
+sample_wood  <- stats %>% filter(Material=="Wood")
+
+mean_steel <- round(mean(sample_steel$Height))
+mean_wood <- round(mean(sample_wood$Height))
+std_steel <- round(sd(sample_steel$Height))
+std_wood <- round(sd(sample_wood$Height))
+sample_size <- nrow(stats)
+
+stats <- data.frame(
+  Material=factor(rep(c("Steel", "Wood"),each=sample_size)),
+  Height=round(c(rnorm(sample_size, mean=mean_steel, sd=std_steel), rnorm(sample_size, mean=mean_wood, sd=std_wood)))
+)
+
+ggplot(stats,aes(y=Height,fill=Material)) + geom_histogram() + 
+  ggtitle("Normal Distribution of US Coaster Height") 
+
+
+```
+
+
+#Standard Histogram of height
+```{r Inversions}
+stats <- as.data.frame(Stats_2021) %>% select(Inversions,Material)
+stats <- na.omit(stats)
+
+sample_steel <- stats %>% filter(Material=="Steel")
+sample_wood  <- stats %>% filter(Material=="Wood")
+
+mean_steel <- round(mean(sample_steel$Inversions))
+mean_wood <- round(mean(sample_wood$Inversions))
+std_steel <- round(sd(sample_steel$Inversions))
+std_wood <- round(sd(sample_wood$Inversions))
+sample_size <- nrow(stats)
+
+stats <- data.frame(
+  Material=factor(rep(c("Steel", "Wood"),each=sample_size)),
+  Inversions=round(c(rnorm(sample_size, mean=mean_steel, sd=std_steel), rnorm(sample_size, mean=mean_wood, sd=std_wood)))
+)
+
+ggplot(stats,aes(y=Inversions,fill=Material)) + geom_histogram() + ggtitle("Normal Distribution of US Coaster Inversions")
+
+```
+#T Distribution Histogram of height
+```{r Height2}
+stats <- as.data.frame(Stats_2021) %>% select(Inversions,Material)
+stats <- na.omit(stats)
+
+sample_steel <- stats %>% filter(Material=="Steel")
+sample_wood  <- stats %>% filter(Material=="Wood")
+
+mean_steel <- round(mean(sample_steel$Inversions))
+mean_wood <- round(mean(sample_wood$Inversions))
+std_steel <- round(sd(sample_steel$Inversions))
+std_wood <- round(sd(sample_wood$Inversions))
+sample_size <- nrow(stats)
+
+stats <- data.frame(
+  Material=factor(rep(c("Steel", "Wood"),each=sample_size)),
+  Inversions=round(c(rnorm(sample_size, mean=mean_steel, sd=std_steel), rnorm(sample_size, mean=mean_wood, sd=std_wood)))
+)
+
+ggplot(stats,aes(y=Inversions,fill=Material)) + geom_histogram() + ggtitle("Normal Distribution of US Coaster Inversions")
+
+```
+
+
