@@ -13,6 +13,7 @@ library(htmlwidgets)
 library(plyr)
 library(reshape2)
 library(data.table)
+library(compositions)
 #knitr::opts_chunk$set(echo = FALSE)
 options(warn=-1)
 ```
@@ -142,11 +143,12 @@ mean_steel <- round(mean(sample_steel$Height))
 mean_wood <- round(mean(sample_wood$Height))
 std_steel <- round(sd(sample_steel$Height))
 std_wood <- round(sd(sample_wood$Height))
+sample_size_wood <- nrow(sample_wood)
+sample_size_steel <- nrow(sample_steel)
 sample_size <- nrow(stats)
-
 stats <- data.frame(
   Material=factor(rep(c("Steel", "Wood"),each=sample_size)),
-  Height=round(c(rnorm(sample_size, mean=mean_steel, sd=std_steel), rnorm(sample_size, mean=mean_wood, sd=std_wood)))
+  Height=round(c(rnorm(sample_size_steel, mean=mean_steel, sd=std_steel), rnorm(sample_size_wood, mean=mean_wood, sd=std_wood)))
 )
 
 ggplot(stats,aes(y=Height,fill=Material)) + geom_histogram() + 
@@ -168,11 +170,14 @@ mean_steel <- round(mean(sample_steel$Inversions))
 mean_wood <- round(mean(sample_wood$Inversions))
 std_steel <- round(sd(sample_steel$Inversions))
 std_wood <- round(sd(sample_wood$Inversions))
+
+sample_size_wood <- nrow(sample_wood)
+sample_size_steel <- nrow(sample_steel)
 sample_size <- nrow(stats)
 
 stats <- data.frame(
   Material=factor(rep(c("Steel", "Wood"),each=sample_size)),
-  Inversions=round(c(rnorm(sample_size, mean=mean_steel, sd=std_steel), rnorm(sample_size, mean=mean_wood, sd=std_wood)))
+  Inversions=round(c(rnorm(sample_size_steel, mean=mean_steel, sd=std_steel), rnorm(sample_size_wood, mean=mean_wood, sd=std_wood)))
 )
 
 ggplot(stats,aes(y=Inversions,fill=Material)) + geom_histogram() + ggtitle("Normal Distribution of US Coaster Inversions")
