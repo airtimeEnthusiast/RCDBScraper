@@ -1,7 +1,7 @@
 # RollerCoasterDatabase.com Web Scraper
 
 ### Description
-[RollerCoasterDatabase.com](https://rcdb.com) is a comprehensive database containing information about roller coasters in the US. The scraper will utilize the BeautifulSoup library for parsing HTML content and Pandas for data manipulation and filtering.
+[RollerCoasterDatabase.com](https://rcdb.com) is a comprehensive database containing information about roller coasters in the US. The scraper will utilize the BeautifulSoup library for parsing HTML content and Pandas for data manipulation and filtering. The Web Scraper aims to provide enthusiasts and researchers with a convenient tool for collecting and analyzing data from RollerCoasterDatabase.com. By leveraging Python's versatility and popular libraries such as BeautifulSoup and Pandas, the scraper offers robust functionality and flexibility, empowering users to explore and analyze roller coaster information effortlessly.
 
 ### Key Features:
 - Scraping Roller Coaster Data: The scraper will navigate through the website's pages to extract information about various roller coasters, including their names, locations, heights, lengths, speeds, and other relevant details.
@@ -13,7 +13,7 @@
 - Programming Language: **Python**
 - Libraries: **BeautifulSoup** (HTML parsing), ***Pandas** (data manipulation)
 
-The RollerCoasterDatabase.com Web Scraper aims to provide enthusiasts and researchers with a convenient tool for collecting and analyzing data from RollerCoasterDatabase.com. By leveraging Python's versatility and popular libraries such as BeautifulSoup and Pandas, the scraper offers robust functionality and flexibility, empowering users to explore and analyze roller coaster information effortlessly.
+
 
 ### Visualization: 
 The example R Shiny app [California Coaster Study](https://wrightapps.shinyapps.io/TidyverseStudy) uses the processed data from the Web Scraper to create dynamic and customizable visualizations, allowing users to explore trends, compare roller coasters, and gain insights into various aspects of roller coaster characteristics and locations.
