@@ -11,7 +11,7 @@
 
 ### Technical Specifications:
 - Programming Language: **Python**
-- Libraries: **BeautifulSoup** (HTML parsing), ***Pandas** (data manipulation)
+- Libraries: **BeautifulSoup** (HTML parsing), **Pandas** (data manipulation)
 
 
 
