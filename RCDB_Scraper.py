@@ -37,6 +37,7 @@ class Parser():
         # Fetch the page
         try:
             response = requests.get(coaster_link)
+            time.sleep(randint(2, 5))
             response.raise_for_status()
             soup = bs(response.text, "html.parser")
 
@@ -139,6 +140,7 @@ class Parser():
         try:
             # Fetch the webpage
             response = requests.get(coaster_link)
+            time.sleep(randint(2, 5))
             response.raise_for_status()
             page_content = response.text
 
@@ -190,6 +192,7 @@ class Parser():
     ####################################################
     def parse_extant_coasters_page(extant_link):
         response = requests.get(extant_link)
+        time.sleep(randint(2, 5))
         soup = bs(response.text, "html.parser")  # Create Responser
         coasters_on_page = soup.body.section.find("div", {"class": "stdtbl rer"}).find("table").find_all(
             "tr")  # Find table references of coasters on the next page
@@ -233,6 +236,7 @@ class Parser():
                    "G-Force"]
         link = "https://rcdb.com/r.htm?ot=2&ex&ol=59"  # List of existing coasters in the US (page 1)
         response = requests.get(link)  # Get Response
+        time.sleep(randint(2, 5))
         soup = bs(response.text, "html.parser")  # Create Responser
         num_extants = soup.body.find("table").select_one(
             "tr:nth-child(1)").td.a.get_text()  # Get total number of extisting coasters in the country
@@ -251,6 +255,7 @@ class Parser():
     #####################################################
     def get_state_coasters_list(extant_link):
         response = requests.get(extant_link)  # Create response
+        time.sleep(randint(2, 5))
         soup = bs(response.text, "html.parser")  # Parse response
         extants = soup.find("body").find("tbody").find_all("tr")  # Find table of extant coasters
         refs = [None] * len(extants)  # Create array of links to extant coasters
@@ -266,6 +271,7 @@ class Parser():
     #####################################################
     def get_state_extant_coasters_link(state_link):
         response = requests.get(state_link)  # Create response
+        time.sleep(randint(2, 5))
         soup = bs(response.text, "html.parser")  # Parse the response
         name = soup.find("body").find("h1").get_text()
         time.sleep(randint(1, 2))
@@ -276,32 +282,73 @@ class Parser():
         return extant_ref
 
     ####################################################
-    # Return a dictionary of links to State pages
+    # Return an array of links to State pages
     ####################################################
     def get_state_page_links(us_url):
         #us_url = "https://rcdb.com/location.htm?id=59"  # List of Coasters in the US
+        visited_states = ["Arizona", "California", "Colorado", "Florida", "Missouri",
+                          "Nevada", "New Jersey", "Ohio", "Pennsylvania", "Texas", "Utah"]
+        include_visited = True
         response = requests.get(us_url)  # Create the response
+        time.sleep(randint(2, 5))
         soup = bs(response.text, "html.parser")  # Parse the response
         states_table = soup.find("body").find("div", class_="stdtbl cen").find("table").find("tbody").find_all(
             "tr")  # Find the table of States
-        #refs = [None] * len(states_table)  # Create array of refs
+        time.sleep(randint(0, 4))
         refs = []
         for i in range(len(states_table)):  # Parse each State
-            time.sleep(randint(0, 4))
             table_data = states_table[i].find_all("td")  # State table data sections
+            time.sleep(randint(0, 3))
             td = table_data[0].find("a")  # State name and link section
             ref = "https://rcdb.com" + td.get('href')  # URL to State page
             name = td.get_text()  # State name
-            refs.append({"name": name, "url": ref})  # Populate reference array with new url reference
-            #print("The state of " + name + " is at " + ref)
+            if not include_visited or name in visited_states:
+                refs.append(ref)  # Populate reference array with new URL reference
+                print("The state of " + name + " is at " + ref)
         return refs
 
+    ####################################################
+    # Return a link to a State's extant amusement park page
+    ####################################################
+    def get_state_extant_parks_link(state_link):
+        response = requests.get(state_link)  # Create response
+        soup = bs(response.text, "html.parser")  # Parse the response
+        time.sleep(randint(0, 5))
+        name = soup.find("body").find("h1").get_text()
+        time.sleep(randint(1, 2))
+        extant_park_ref = soup.find("table").find_all("tr")  # Find tr's within the table body
+        extant_park_ref = extant_park_ref[2].find("td").find("a").get(
+            "href")  # Extract first table reference to get the url href
+        extant_park_ref = "https://rcdb.com" + extant_park_ref  # Format url
+        print(name, "'s extant parks are located at: ", extant_park_ref)
+        return extant_park_ref
 
-    def get_state_park_page_links():
+    ####################################################
+    # Return the link to the second page of the state's extant park pages
+    ####################################################
+    def get_second_extant_park_page(link):
+        response = requests.get(link)  # Get Response
+        soup = bs(response.text, "html.parser")  # Create Responser
+        time.sleep(randint(2, 5))
+        pagination = soup.body.section.find("div", {"id": "rfoot"}).select("a")  # Get number of pages of existant coasters
+        second_page_link = "https://rcdb.com" + pagination[0].get("href")
+        print("Second page: ", second_page_link)
+        return second_page_link
+
+    ####################################################
+    # Return an array of links to each park from a state page
+    ####################################################
+    def get_park_page_links(link):
+        response = requests.get(link)
+        soup = bs(response.text, "html.parser")
+        time.sleep(randint(2,5))
+
+
 #####################################################
 # Main
 #####################################################
 def main():
+    time.sleep(randint(0, 2))
     print(str(int(len("hello"))))
     # Parser.parse_coaster("https://rcdb.com/21371.htm")
     # Parser.parse_extant_coasters()     #Parse Coaster List
