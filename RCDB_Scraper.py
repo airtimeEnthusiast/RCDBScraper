@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup as bs
 from random import seed
 from random import randint
 import logging
+import re
 
 seed(1)
 
@@ -137,12 +138,12 @@ class Parser():
     def parse_coaster_coordinates(coaster_link):
         try:
             # Fetch the webpage
-            response = requests.get(rcdb_url)
+            response = requests.get(coaster_link)
             response.raise_for_status()
             page_content = response.text
 
             # Parse the HTML content
-            soup = BeautifulSoup(page_content, 'html.parser')
+            soup = bs(page_content, 'html.parser')
 
             # Find the maps pop-up link
             maps_link_tag = soup.find('a', string='Maps')
@@ -224,7 +225,7 @@ class Parser():
         return _
 
     ####################################################
-    # Parse through  all the pages of existant coasters
+    # Parse through all the pages of existant coasters
     ####################################################
     def parse_extant_coasters():
         columns = ["Name", "Park", "City", "State", "Country", "Status", "Status Date", "Material", "Seating", "Thrill",
@@ -244,43 +245,6 @@ class Parser():
         data_frame = pd.concat(frames)
         data_frame.set_axis(columns, axis=1)
         data_frame.to_csv("US_Coaster_Stats_2021.csv")
-
-    ######
-    # Tester
-    ######
-    def test_requests(extant_link):
-        response = requests.get(extant_link)
-        soup = bs(response.text, "html.parser")  # Create Responser
-        coasters_on_page = soup.body.section.find("div", {"class": "stdtbl rer"}).find("table").find_all(
-            "tr")  # Find table references of coasters on the next page
-        print(str(len(coasters_on_page)) + " coasters on page " + extant_link)
-        # num_extants = soup.body.find("table").select_one("tr:nth-child(1)").td.a.get_text()    #Get total number of extisting coasters in the country
-        coaster_data_array = [[] for r in range((len(coasters_on_page) - 1))]  # Store data in an array
-
-        ##For first coaster data stats##
-        coaster_link = "https://rcdb.com" + coasters_on_page[1].select_one("td:nth-child(2)").a.get(
-            "href")  # Next coaster link
-        print("Getting the first coaster: " + str(0) + " at " + coaster_link)
-        coaster_data_array[0] = Parser.parse_coaster(coaster_link)
-        # time.sleep(2)
-
-        ##Get the next coaster data stats##
-        for i in range(2, len(coasters_on_page)):
-            if coasters_on_page[i].select_one("td:nth-child(1)").a.get("aria-label") == None:
-                print("No picture!!!")
-                coaster_link = "https://rcdb.com" + coasters_on_page[i].select_one("td:nth-child(1)").a.get(
-                    "href")  # Next coaster link
-            else:
-                coaster_link = "https://rcdb.com" + coasters_on_page[i].select_one("td:nth-child(2)").a.get(
-                    "href")  # Next coaster link
-            print("Getting the next coaster: " + str(i) + " at " + coaster_link)
-            coaster_data_array[i - 1] = Parser.parse_coaster(coaster_link)  # Get the next coaster data stats
-            print(coaster_data_array[i - 1])
-            col_names = ['Name', 'Park', 'City', 'State', 'Country', 'Status', 'Status Date', 'Material', 'Seating',
-                         'Thrill', 'Make', 'Model', 'Length', 'Height', 'Drop', 'Speed', 'Inversions', 'VerticalAngle',
-                         'Duration', 'G-Force']
-            _ = pd.DataFrame(coaster_data_array, columns=col_names)
-        return _
 
     #####################################################
     # Return an array of links to extant coasters from a state
@@ -312,36 +276,38 @@ class Parser():
         return extant_ref
 
     ####################################################
-    # Return an array of links to State pages
+    # Return a dictionary of links to State pages
     ####################################################
-    def parse_state_pages():
-        us_url = "https://rcdb.com/location.htm?id=59"  # List of Coasters in the US
+    def get_state_page_links(us_url):
+        #us_url = "https://rcdb.com/location.htm?id=59"  # List of Coasters in the US
         response = requests.get(us_url)  # Create the response
         soup = bs(response.text, "html.parser")  # Parse the response
         states_table = soup.find("body").find("div", class_="stdtbl cen").find("table").find("tbody").find_all(
             "tr")  # Find the table of States
-        refs = [None] * len(states_table)  # Create array of refs
+        #refs = [None] * len(states_table)  # Create array of refs
+        refs = []
         for i in range(len(states_table)):  # Parse each State
-            time.sleep(randint(0, 10))
+            time.sleep(randint(0, 4))
             table_data = states_table[i].find_all("td")  # State table data sections
             td = table_data[0].find("a")  # State name and link section
             ref = "https://rcdb.com" + td.get('href')  # URL to State page
             name = td.get_text()  # State name
-            refs[i] = ref  # Populate reference array with new url reference
-            print("Parsing the state of " + name + " at " + ref)
+            refs.append({"name": name, "url": ref})  # Populate reference array with new url reference
+            #print("The state of " + name + " is at " + ref)
         return refs
 
 
+    def get_state_park_page_links():
 #####################################################
 # Main
 #####################################################
 def main():
-    # print(str(int(len("hello"))))
-    Parser.parse_coaster("https://rcdb.com/21371.htm")
+    print(str(int(len("hello"))))
+    # Parser.parse_coaster("https://rcdb.com/21371.htm")
     # Parser.parse_extant_coasters()     #Parse Coaster List
-    # get_state_coasters_list("https://rcdb.com/r.htm?ot=2&df&ol=13833") # Get the list of existing coasters links State of Nevada
-    # get_state_extant_coasters_link("https://rcdb.com/location.htm?id=13833") # Find the link to an existing coasters page in Nevada
-
+    #get_state_coasters_list("https://rcdb.com/r.htm?ot=2&df&ol=13833") # Get the list of existing coasters links State of Nevada
+    #get_state_extant_coasters_link("https://rcdb.com/location.htm?id=13833") # Find the link to an existing coasters page in Nevada
+    # get_state_extant_parks_link() # Get
 
 if __name__ == '__main__':
     main()
