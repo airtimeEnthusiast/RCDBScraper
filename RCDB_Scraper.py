@@ -9,9 +9,12 @@ import pandas as pd
 from bs4 import BeautifulSoup as bs
 from random import seed
 from random import randint
+import logging
 
 seed(1)
 
+# Configure logging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # Parser class: Methods are
 class Parser():
@@ -23,102 +26,140 @@ class Parser():
     # Must include a link to a coaster
     #####################################################
     def parse_coaster(coaster_link):
-        ##The stats of the data array##
-        Name = None
-        Park = None
-        City = None
-        State = None
-        Country = None
-        Status_type = None
-        Status_date = None
-        Material = None
-        Positioning = None
-        Thrill = None
-        Make = None
-        Model = None
-        Length = None
-        Height = None
-        Drop = None
-        Speed = None
-        Inversions = None
-        VerticalAngle = None
-        Duration = None
-        GForce = None
 
-        ##Building the response##
-        response = requests.get(coaster_link)
-        soup = bs(response.text, "html.parser")
-        stat_sections = soup.find("body").find_all("section")
+        ## Initialize the stats ##
+        Name = Park = City = State = Country = None
+        Status_type = Status_date = Material = Positioning = Thrill = None
+        Make = Model = Length = Height = Drop = Speed = Inversions = None
+        VerticalAngle = Duration = GForce = None
 
-        ##getting the name##
-        Name = stat_sections[0].select_one("div:nth-child(1)").div.div.h1.get_text()
+        # Fetch the page
+        try:
+            response = requests.get(coaster_link)
+            response.raise_for_status()
+            soup = bs(response.text, "html.parser")
 
-        ##getting the meta data of the coaster (location)##
-        metas = stat_sections[0].select_one("div:nth-child(1)").div.div.find_all("a")
-        Park = metas[0].get_text()
-        City = metas[1].get_text()
-        State = metas[2].get_text()
-        Country = metas[3].get_text()
-        # time.sleep(randint(1,3))
+            try:
+                # Parse the name
+                stat_sections = soup.find("body").find_all("section")
+                Name = stat_sections[0].select_one("div:nth-child(1)").div.div.h1.get_text(strip=True)
+            except Exception as e:
+                logging.error(f"Error parsing Name: {e}")
 
-        ##get operational status ##
-        Status_type = stat_sections[0].select_one("div:nth-child(1)").div.p.a.get_text()
-        if stat_sections[0].select_one("div:nth-child(1)").div.p.time != None:
-            Status_date = stat_sections[0].select_one("div:nth-child(1)").div.p.time["datetime"]
+            try:
+                # Parse location metadata
+                metas = stat_sections[0].select_one("div:nth-child(1)").div.div.find_all("a")
+                if metas:
+                    Park = metas[0].get_text(strip=True)
+                    City = metas[1].get_text(strip=True)
+                    State = metas[2].get_text(strip=True)
+                    Country = metas[3].get_text(strip=True)
+            except Exception as e:
+                logging.error(f"Error parsing location metadata: {e}")
 
-        ##get type##
-        Types = stat_sections[0].select_one("div:nth-child(1)").div.ul.find_all("li")
-        Material = Types[1].a.get_text()
-        Positioning = Types[2].a.get_text()
-        # If Thrill type is displayed
-        if len(Types) > 3:
-            Thrill = Types[3].a.get_text()
+            try:
+                # Parse operational status
+                status = stat_sections[0].select_one("div:nth-child(1)").div.p
+                if status:
+                    Status_type = status.a.get_text(strip=True)
+                    if status.time:
+                        Status_date = status.time.get("datetime", None)
+            except Exception as e:
+                logging.error(f"Error parsing operational status: {e}")
 
-        ##get make and model##
-        # soup search meta.ul.strings:
-        Types = stat_sections[0].select_one("div:nth-child(1)").div.find("div", class_="scroll")
-        if Types != None:
-            TypesCheck = Types.get_text().split(":")
-            Types = stat_sections[0].select_one("div:nth-child(1)").div.find("div", class_="scroll").find("p").find_all(
-                "a")
-            for i in range(0, len(Types)):
-                if TypesCheck[i].find("Make") != -1:
-                    Make = Types[i].get_text()
-                if TypesCheck[i].find("Model") != -1:
-                    Model = Types[i].get_text()
-        # time.sleep(randint(1,3))
+            try:
+                # Parse type (Material, Positioning, Thrill)
+                Types = stat_sections[0].select_one("div:nth-child(1)").div.ul.find_all("li")
+                if Types:
+                    Material = Types[1].a.get_text(strip=True) if len(Types) > 1 else None
+                    Positioning = Types[2].a.get_text(strip=True) if len(Types) > 2 else None
+                    Thrill = Types[3].a.get_text(strip=True) if len(Types) > 3 else None
+            except Exception as e:
+                logging.error(f"Error parsing type: {e}")
 
-        ##get track stats##
-        ## https://github.com/willcliffy/RCDB-Scraper/blob/main/scraper.py##
-        ## Lines 85-105 were borrowed from this file for this section since I had trouble parsing this tbody##
-        if soup.find('table', {'class': 'stat-tbl'}) != None:
-            specs = list(soup.find('table', {'class': 'stat-tbl'}).strings)
-            for i in range(len(specs)):
-                if specs[i] == 'Length':
-                    Length = specs[i + 1]
-                elif specs[i] == 'Height':
-                    Height = specs[i + 1]
-                elif specs[i] == 'Drop':
-                    Drop = specs[i + 1]
-                elif specs[i] == 'Speed':
-                    Speed = specs[i + 1]
-                elif specs[i] == 'Inversions':
-                    Inversions = specs[i + 1]
-                elif specs[i] == 'Vertical Angle':
-                    VerticalAngle = specs[i + 1]
-                elif specs[i] == 'Duration':
-                    Duration = specs[i + 1]
-                elif specs[i] == 'G-Force':
-                    GForce = specs[i + 1]
-                else:
-                    continue
-                i += 1
+            try:
+                # Parse Make and Model
+                Types = stat_sections[0].select_one("div:nth-child(1)").div.find("div", class_="scroll")
+                if Types:
+                    TypesCheck = Types.get_text().split(":")
+                    for i, t in enumerate(Types.find_all("a")):
+                        if "Make" in TypesCheck[i]:
+                            Make = t.get_text(strip=True)
+                        if "Model" in TypesCheck[i]:
+                            Model = t.get_text(strip=True)
+            except Exception as e:
+                logging.error(f"Error parsing Make and Model: {e}")
 
-        ##Return the data array##
-        _ = [Name, Park, City, State, Country, Status_type, Status_date, Material, Positioning, Thrill, Make, Model,
-             Length, Height, Drop, Speed, Inversions, VerticalAngle, Duration, GForce]
-        print(_)
-        return _
+            try:
+                # Parse track stats
+                stats_table = soup.find('table', {'class': 'stat-tbl'})
+                if stats_table:
+                    specs = list(stats_table.strings)
+                    for i in range(len(specs)):
+                        if specs[i] == 'Length':
+                            Length = specs[i + 1]
+                        elif specs[i] == 'Height':
+                            Height = specs[i + 1]
+                        elif specs[i] == 'Drop':
+                            Drop = specs[i + 1]
+                        elif specs[i] == 'Speed':
+                            Speed = specs[i + 1]
+                        elif specs[i] == 'Inversions':
+                            Inversions = specs[i + 1]
+                        elif specs[i] == 'Vertical Angle':
+                            VerticalAngle = specs[i + 1]
+                        elif specs[i] == 'Duration':
+                            Duration = specs[i + 1]
+                        elif specs[i] == 'G-Force':
+                            GForce = specs[i + 1]
+            except Exception as e:
+                logging.error(f"Error parsing track stats: {e}")
+
+        except requests.exceptions.RequestException as e:
+            logging.critical(f"Request error: {e}")
+            return None
+
+        except Exception as e:
+            logging.critical(f"Unexpected error: {e}")
+            return None
+
+        # Return the data array
+        data = [
+            Name, Park, City, State, Country, Status_type, Status_date,
+            Material, Positioning, Thrill, Make, Model, Length, Height,
+            Drop, Speed, Inversions, VerticalAngle, Duration, GForce
+        ]
+        logging.info("Parsed data successfully")
+        #print(data)
+
+        return data
+
+    def parse_coaster_coordinates(coaster_link):
+        try:
+            # Fetch the webpage
+            response = requests.get(rcdb_url)
+            response.raise_for_status()
+            page_content = response.text
+
+            # Parse the HTML content
+            soup = BeautifulSoup(page_content, 'html.parser')
+
+            # Find the maps pop-up link
+            maps_link_tag = soup.find('a', string='Maps')
+            if maps_link_tag:
+                maps_popup_url = maps_link_tag.get('href')
+
+                # Extract coordinates from the URL
+                match = re.search(r'lat=([-\d.]+)&lng=([-\d.]+)', maps_popup_url)
+                if match:
+                    latitude = match.group(1)
+                    longitude = match.group(2)
+                    return latitude, longitude
+
+            return None  # Coordinates not found
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
 
     ####################################################
     # Return an array of extant coaster page links
@@ -296,7 +337,7 @@ class Parser():
 #####################################################
 def main():
     # print(str(int(len("hello"))))
-    Parser.parse_coaster("https://rcdb.com/1574.htm")
+    Parser.parse_coaster("https://rcdb.com/21371.htm")
     # Parser.parse_extant_coasters()     #Parse Coaster List
     # get_state_coasters_list("https://rcdb.com/r.htm?ot=2&df&ol=13833") # Get the list of existing coasters links State of Nevada
     # get_state_extant_coasters_link("https://rcdb.com/location.htm?id=13833") # Find the link to an existing coasters page in Nevada
