@@ -22,6 +22,252 @@ class Parser():
     coaster_data_array = [[]]
     coaster_extant_pages = []
 
+    visited_parks_and_rides = {
+        "Arizona": {
+            "Castles N' Coasters": [
+                "Desert Storm",
+                "Patriot"
+            ]
+        },
+        "California": {
+            "Belmont Park": ["Giant Dipper"],
+            "California's Great America": [
+                "Gold Striker",
+                "Railblazer",
+                "Invertigo",
+                "Lucy's Crabbie Cabbies",
+                "Patriot",
+                "Flight Deck",
+                "Demon",
+                "Grizzly",
+                "Psycho Mouse",
+                "Woodstock Express",
+                "Vortex"
+            ],
+            "Disney California Adventure Park": [
+                "Incredicoaster",
+                "Goofy's Sky School"
+            ],
+            "Disneyland": [
+                "Space Mountain",
+                "Matterhorn Bobsleds",
+                "Big Thunder Mountain Railroad",
+                "Chip & Dale's Gadget Coaster"
+            ],
+            "Gilroy Gardens Family Theme Park": ["Quicksilver Express", "Timber Twister"],
+            "Happy Hollow Park and Zoo": ["Pacific Fruit Express"],
+            "Knott's Berry Farm": [
+                "GhostRider",
+                "HangTime",
+                "Boomerang",
+                "Silver Bullet",
+                "Xcelerator",
+                "Sierra Sidewinder",
+                "Jaguar!",
+                "Montezooma's Revenge",
+                "Coast Rider",
+                "Timberline Twister"
+            ],
+            "Legoland California": ["The Dragon", "Coastersaurus", "Technic Coaster"],
+            "Oakland Zoo": ["Tiger Trek"],
+            "Pacific Park": ["West Coaster"],
+            "Santa Cruz Beach Boardwalk": ["Giant Dipper", "Undertow", "Hurricane", "Sea Serpent"],
+            "SeaWorld San Diego": ["Manta", "Journey to Atlantis", "Electric Eel", "Emperor", "Arctic Rescue",
+                                   "Tidal Twister"],
+            "Six Flags Discovery Kingdom": [
+                "Medusa",
+                "Kong",
+                "Superman Ultimate Flight",
+                "The Joker",
+                "Boomerang Coast to Coaster",
+                "Batman: The Ride",
+                "Flash: Vertical Velocity",
+                "Roadrunner Express",
+                "Pandemonium",
+                "Roar",
+                "Cobra",
+                "Harley Quinn Crazy Coaster"
+            ],
+            "Six Flags Magic Mountain": [
+                "Twisted Colossus",
+                "X2",
+                "Tatsu",
+                "Goliath",
+                "Scream",
+                "Batman The Ride",
+                "Riddler's Revenge",
+                "Apocalypse the Ride",
+                "Ninja",
+                "Viper",
+                "New Revolution"
+                "Canyon Blaster",
+                "Wonder Woman Flight of Courage",
+                "West Coast Racers",
+                "Speedy Gonzales Hot Rod Racers",
+                "Road Runner Express",
+                "Full Throttle",
+                "Superman: Escape from Krypton",
+                "Colossus",
+                "Green Lantern: First Flight"
+            ],
+            "Universal Studios Hollywood": ["Revenge of the Mummy"]
+        },
+        "Colorado": {
+            "Glenwood Caverns Adventure Park": [
+                "Alpine Coaster",
+            ]
+        },
+        "Florida": {
+            "Busch Gardens Tampa": [
+                "Air Grover",
+                "Montu",
+                "Kumba",
+                "SheiKra",
+                "Cheetah Hunt",
+                "Scorpion",
+                "Cobra's Curse",
+                "Tigris",
+                "SandSerpent"
+            ],
+            "Disney's Animal Kingdom": ["Expedition Everest", "Primeval Whirl"],
+            "Disney's Hollywood Studios": ["Rock 'n' Roller Coaster"],
+            "SeaWorld Orlando": [
+                "Mako",
+                "Kraken",
+                "Manta",
+                "Journey to Atlantis",
+                "Pipeline the Surf Coaster"
+            ],
+            "Universal's Islands of Adventure": [
+                "The Incredible Hulk Coaster",
+                "Hagrid's Magical Creatures Motorbike Adventure",
+                "Flight of the Hippogriff"
+            ],
+            "Universal Studios Florida": [
+                "Hollywood Rip Ride Rockit",
+                "Revenge of the Mummy"
+            ]
+        },
+        "Missouri": {
+            "Silver Dollar City": [
+                "Outlaw Run",
+                "Time Traveler",
+                "Wildfire",
+                "Powder Keg: A Blast in the Wilderness",
+                "Thunderation",
+                "Fire In The Hole"
+            ]
+        },
+        "Nevada": {
+            "New York, New York Hotel & Casino": [
+                "Big Apple Coaster",
+            ]
+        },
+        "New Jersey": {
+            "Six Flags Great Adventure": [
+                "El Toro",
+                "Kingda Ka",
+                "Nitro",
+                "Medusa",
+                "Skull Mountain",
+                "Runaway Mine Train",
+                "Joker",
+                "Batman The Ride",
+                "Dark Knight",
+                "Jersey Devil Coaster"
+            ]
+        },
+        "Ohio": {
+            "Cedar Point": [
+                "Millennium Force",
+                "Top Thrill Dragster",
+                "Maverick",
+                "Steel Vengeance",
+                "Magnum XL-200",
+                "Raptor",
+                "GateKeeper",
+                "Valravn",
+                "Rougarou",
+                "Blue Streak",
+                "Cedar Creek Mine Ride",
+                "Gemini",
+                "Iron Dragon",
+                "Wicked Twister",
+                "Corkscrew"
+            ],
+            "Kings Island": [
+                "Diamondback",
+                "Banshee",
+                "Backlot Stunt Coaster",
+                "Beast",
+                "Mystic Timbers",
+                "Flight of Fear",
+                "Invertigo",
+                "Bat",
+                "Adventure Express",
+                "Racer",
+                "Vortex",
+                "Firehawk"
+            ]
+        },
+        "Pennsylvania": {
+            "Hersheypark": [
+                "Candymonium",
+                "Skyrush",
+                "Storm Runner",
+                "Fahrenheit",
+                "Great Bear",
+                "Lightning Racer",
+                "Wildcat's Revenge",
+                "Comet",
+                "Sooperdooperlooper",
+                "Laff Trakk",
+                "Cocoa Cruiser"
+            ],
+        },
+        "Texas": {
+            "Six Flags Fiesta Texas": [
+                "Iron Rattler",
+                "Superman Krypton Coaster",
+                "Goliath",
+                "Poltergeist",
+                "Batman The Ride",
+                "Superman Krypton Coaster",
+                "Wonder Woman Golden Lasso Coaster",
+                "Dr. Diabolical's Cliffhanger"
+            ],
+            "Six Flags Over Texas": [
+                "Batman The Ride",
+                "New Texas Giant",
+                "Joker",
+                "Titan",
+                "Mr. Freeze",
+                "Mini Mine Train",
+                "Shock Wave",
+                "Batman The Ride",
+                "Runaway Mine Train",
+                "Runaway Mountain",
+                "Judge Roy Scream",
+                "La Vibora",
+                "Aquaman: Power Wave",
+                "Pandemonium"
+            ]
+        },
+        "Utah": {
+            "Lagoon": [
+                "Cannibal",
+                "Colossus the Fire Dragon",
+                "Wicked",
+                "Spider",
+                "Jet Star 2",
+                "Roller Coaster",
+                "Primordial",
+                "Wild Mouse",
+                "Roller Coaster"
+            ]
+        }
+    }
+
     #####################################################
     # Return a data array of coaster stats
     # Must include a link to a coaster
@@ -37,7 +283,6 @@ class Parser():
         # Fetch the page
         try:
             response = requests.get(coaster_link)
-            time.sleep(randint(2, 5))
             response.raise_for_status()
             soup = bs(response.text, "html.parser")
 
@@ -140,7 +385,6 @@ class Parser():
         try:
             # Fetch the webpage
             response = requests.get(coaster_link)
-            time.sleep(randint(2, 5))
             response.raise_for_status()
             page_content = response.text
 
@@ -192,7 +436,6 @@ class Parser():
     ####################################################
     def parse_extant_coasters_page(extant_link):
         response = requests.get(extant_link)
-        time.sleep(randint(2, 5))
         soup = bs(response.text, "html.parser")  # Create Responser
         coasters_on_page = soup.body.section.find("div", {"class": "stdtbl rer"}).find("table").find_all(
             "tr")  # Find table references of coasters on the next page
@@ -236,7 +479,6 @@ class Parser():
                    "G-Force"]
         link = "https://rcdb.com/r.htm?ot=2&ex&ol=59"  # List of existing coasters in the US (page 1)
         response = requests.get(link)  # Get Response
-        time.sleep(randint(2, 5))
         soup = bs(response.text, "html.parser")  # Create Responser
         num_extants = soup.body.find("table").select_one(
             "tr:nth-child(1)").td.a.get_text()  # Get total number of extisting coasters in the country
@@ -255,7 +497,6 @@ class Parser():
     #####################################################
     def get_state_coasters_list(extant_link):
         response = requests.get(extant_link)  # Create response
-        time.sleep(randint(2, 5))
         soup = bs(response.text, "html.parser")  # Parse response
         extants = soup.find("body").find("tbody").find_all("tr")  # Find table of extant coasters
         refs = [None] * len(extants)  # Create array of links to extant coasters
@@ -271,7 +512,6 @@ class Parser():
     #####################################################
     def get_state_extant_coasters_link(state_link):
         response = requests.get(state_link)  # Create response
-        time.sleep(randint(2, 5))
         soup = bs(response.text, "html.parser")  # Parse the response
         name = soup.find("body").find("h1").get_text()
         time.sleep(randint(1, 2))
@@ -284,10 +524,8 @@ class Parser():
     ####################################################
     # Return an array of links to State pages
     ####################################################
-    def get_state_page_links(us_url):
+    def get_state_page_links(us_url, visited_stated):
         #us_url = "https://rcdb.com/location.htm?id=59"  # List of Coasters in the US
-        visited_states = ["Arizona", "California", "Colorado", "Florida", "Missouri",
-                          "Nevada", "New Jersey", "Ohio", "Pennsylvania", "Texas", "Utah"]
         include_visited = True
         response = requests.get(us_url)  # Create the response
         time.sleep(randint(2, 5))
@@ -335,21 +573,57 @@ class Parser():
         print("Second page: ", second_page_link)
         return second_page_link
 
+
     ####################################################
     # Return an array of links to each park from a state page
     ####################################################
-    def get_park_page_links(link):
+    def get_park_page_links(link, visited_parks_and_rides):
         response = requests.get(link)
         soup = bs(response.text, "html.parser")
-        time.sleep(randint(2,5))
+        time.sleep(randint(2, 5))
+        park_table = soup.find("body").find("div", class_="stdtbl rer").find("table").find("tbody").find_all(
+            "tr")  # Find the table of parks
+        refs = []
+
+        # Flatten the visited_parks_and_rides dictionary to extract all parks
+        all_parks = {park for state in visited_parks_and_rides.values() for park in state.keys()}
+
+        for i in range(len(park_table)):  # Parse each State
+            table_data = park_table[i].find_all("td")  # State table data sections
+            sleep(randint(0, 3))
+            td = table_data[1].find("a")  # State name and link section
+            ref = "https://rcdb.com" + td.get('href')  # URL to State page
+            name = td.get_text()  # State name
+            if name in all_parks:  # Check if park name is in visited parks
+                refs.append(ref)  # Populate reference array with new URL reference
+                print(f"The park {name} is at {ref}")
+
+        return refs
+    ####################################################
+    # Export a dataframe of visited parks to a csv
+    ####################################################
+    def parse_visited_parks():
+        print("parse_visted_parks")
+
+    ####################################################
+    # Print visited parks and rides
+    ####################################################
+    def print_visited_parks_and_rides(parks_and_rides):
+        for state, parks in parks_and_rides.items():
+            print(f"State: {state}")
+            for park, rides in parks.items():
+                print(f"  Park: {park}")
+                print("    Rides:")
+                for ride in rides:
+                    print(f"      - {ride}")
 
 
 #####################################################
 # Main
 #####################################################
 def main():
-    time.sleep(randint(0, 2))
     print(str(int(len("hello"))))
+    Parser.print_visited_parks_and_rides(Parser.visited_parks_and_rides)
     # Parser.parse_coaster("https://rcdb.com/21371.htm")
     # Parser.parse_extant_coasters()     #Parse Coaster List
     #get_state_coasters_list("https://rcdb.com/r.htm?ot=2&df&ol=13833") # Get the list of existing coasters links State of Nevada

@@ -22,12 +22,10 @@ class MyTestCase(unittest.TestCase):
         #self.assertEquals(len(states_link),11)
 
     def test_get_state_extant_park_page(self):
-        time.sleep(randint(2, 5))
         ca_state_link = "https://rcdb.com/location.htm?id=1499"
-        park_pages_reference = Parser.get_state_extant_parks_link("https://rcdb.com/location.htm?id=1499")
-        park_pages = Parser.get_second_extant_park_page(park_pages_reference)
-        # Print the collected pages
-
+        first_park_page = Parser.get_state_extant_parks_link(ca_state_link)
+        second_park_page = Parser.get_second_extant_park_page(first_park_page)
+        park_pages = Parser.get_park_page_links(first_park_page, Parser.visited_parks_and_rides)
 
 if __name__ == '__main__':
     unittest.main()
