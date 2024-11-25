@@ -524,8 +524,8 @@ class Parser():
     ####################################################
     # Return an array of links to State pages
     ####################################################
-    def get_state_page_links(us_url, visited_stated):
-        #us_url = "https://rcdb.com/location.htm?id=59"  # List of Coasters in the US
+    def get_state_page_links(us_url, visited_parks_and_rides):
+        # us_url = "https://rcdb.com/location.htm?id=59"  # List of Coasters in the US
         include_visited = True
         response = requests.get(us_url)  # Create the response
         time.sleep(randint(2, 5))
@@ -534,15 +534,19 @@ class Parser():
             "tr")  # Find the table of States
         time.sleep(randint(0, 4))
         refs = []
+
+        # Extract the visited states from the dictionary keys
+        visited_states = visited_parks_and_rides.keys()
+
         for i in range(len(states_table)):  # Parse each State
             table_data = states_table[i].find_all("td")  # State table data sections
             time.sleep(randint(0, 3))
             td = table_data[0].find("a")  # State name and link section
             ref = "https://rcdb.com" + td.get('href')  # URL to State page
             name = td.get_text()  # State name
-            if not include_visited or name in visited_states:
+            if not include_visited or name in visited_states:  # Check if the state is in visited states
                 refs.append(ref)  # Populate reference array with new URL reference
-                print("The state of " + name + " is at " + ref)
+                print(f"The state of {name} is at {ref}")
         return refs
 
     ####################################################
@@ -590,7 +594,7 @@ class Parser():
 
         for i in range(len(park_table)):  # Parse each State
             table_data = park_table[i].find_all("td")  # State table data sections
-            sleep(randint(0, 3))
+            time.sleep(randint(0, 3))
             td = table_data[1].find("a")  # State name and link section
             ref = "https://rcdb.com" + td.get('href')  # URL to State page
             name = td.get_text()  # State name
@@ -599,11 +603,66 @@ class Parser():
                 print(f"The park {name} is at {ref}")
 
         return refs
+
+    ####################################################
+    # Return an array of links to each park's coaster page from a state page
+    ####################################################
+    def get_park_coaster_page_links(link, visited_parks_and_rides):
+        response = requests.get(link)
+        soup = bs(response.text, "html.parser")
+
+        # Find park title
+        park_td = soup.find("body").find("div", id="demo").find("div", id="feature").find("div").find("h1")
+
+        # Find ride table
+        ride_table = soup.find("body").find("div", class_="stdtbl ctr").find("table").find("tbody").find_all(
+            "tr")  # Rides table
+        time.sleep(randint(0, 3))
+        refs = []
+
+        # Flatten the dictionary to get a mapping of parks to coasters
+        all_parks = {
+            park: set(coasters) for state, parks in visited_parks_and_rides.items() for park, coasters in parks.items()
+        }
+
+        park_name = park_td.get_text().strip() if park_td else None  # Park name
+
+        if park_name in all_parks:  # Check if the park is in visited parks
+            for row in ride_table:  # Iterate through the ride table
+                table_data = row.find_all("td")
+                coaster_td = table_data[1].find("a")  # Coaster name and link section
+                time.sleep(randint(0, 3))
+                coaster_name = coaster_td.get_text().strip() if coaster_td else None  # Coaster name
+                ref = "https://rcdb.com" + coaster_td.get('href') if coaster_td else None  # Coaster URL
+
+                # Check if the coaster is in the visited park's coaster list
+                if coaster_name in all_parks[park_name]:
+                    refs.append(ref)  # Add only the URL
+                    print(f"Park: {park_name}, Coaster: {coaster_name}, URL: {ref}")
+
+        return refs
+
     ####################################################
     # Export a dataframe of visited parks to a csv
     ####################################################
     def parse_visited_parks():
-        print("parse_visted_parks")
+        print("Exporting a dataframe of visited parks and coasters to a csv")
+
+
+    ####################################################
+    # Count the number of parks and rides
+    ####################################################
+    def count_parks_and_rides(visited_parks_and_rides):
+        total_parks = 0
+        total_rides = 0
+
+        for state, parks in visited_parks_and_rides.items():
+            total_parks += len(parks)  # Count parks in each state
+            for rides in parks.values():
+                total_rides += len(rides)  # Count rides in each park
+
+        return total_parks, total_rides
+
 
     ####################################################
     # Print visited parks and rides
