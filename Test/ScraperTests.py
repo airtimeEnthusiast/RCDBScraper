@@ -27,9 +27,18 @@ class MyTestCase(unittest.TestCase):
         #second_park_page = Parser.get_second_extant_park_page(first_park_page)
         #park_pages = Parser.get_park_page_links(first_park_page, Parser.visited_parks_and_rides)
 
-    def test_get_park_coaster_page_links(self):
-        park_link = "https://rcdb.com/4570.htm"
-        Parser.get_park_coaster_page_links(park_link, Parser.visited_parks_and_rides)
+    #def test_get_park_coaster_page_links(self):
+    #    park_link = "https://rcdb.com/16985.htm"
+    #    Parser.get_park_coaster_page_links(park_link, Parser.visited_parks_and_rides)
+
+    def test_get_coaster(self):
+        coaster_link = "https://rcdb.com/16985.htm"
+        Parser.parse_coaster(coaster_link)
+
+    def test_get_park(self):
+        park_link = "https://rcdb.com/4543.htm"
+        Parser.parse_park_page(park_link)
+
 
 if __name__ == '__main__':
     unittest.main()

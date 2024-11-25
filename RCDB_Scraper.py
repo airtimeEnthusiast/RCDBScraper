@@ -10,7 +10,11 @@ from bs4 import BeautifulSoup as bs
 from random import seed
 from random import randint
 import logging
-import re
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.action_chains import ActionChains
+
 
 seed(1)
 
@@ -295,6 +299,7 @@ class Parser():
 
             try:
                 # Parse location metadata
+                time.sleep(randint(1, 2))
                 metas = stat_sections[0].select_one("div:nth-child(1)").div.div.find_all("a")
                 if metas:
                     Park = metas[0].get_text(strip=True)
@@ -318,6 +323,7 @@ class Parser():
                 # Parse type (Material, Positioning, Thrill)
                 Types = stat_sections[0].select_one("div:nth-child(1)").div.ul.find_all("li")
                 if Types:
+                    time.sleep(randint(1, 2))
                     Material = Types[1].a.get_text(strip=True) if len(Types) > 1 else None
                     Positioning = Types[2].a.get_text(strip=True) if len(Types) > 2 else None
                     Thrill = Types[3].a.get_text(strip=True) if len(Types) > 3 else None
@@ -327,6 +333,7 @@ class Parser():
             try:
                 # Parse Make and Model
                 Types = stat_sections[0].select_one("div:nth-child(1)").div.find("div", class_="scroll")
+                time.sleep(randint(1, 2))
                 if Types:
                     TypesCheck = Types.get_text().split(":")
                     for i, t in enumerate(Types.find_all("a")):
@@ -340,6 +347,7 @@ class Parser():
             try:
                 # Parse track stats
                 stats_table = soup.find('table', {'class': 'stat-tbl'})
+                time.sleep(randint(1, 2))
                 if stats_table:
                     specs = list(stats_table.strings)
                     for i in range(len(specs)):
@@ -372,41 +380,69 @@ class Parser():
 
         # Return the data array
         data = [
-            Name, Park, City, State, Country, Status_type, Status_date,
-            Material, Positioning, Thrill, Make, Model, Length, Height,
-            Drop, Speed, Inversions, VerticalAngle, Duration, GForce
+            Name, Park, City, State, Country, Status_type, Status_date, Material,
+            Positioning, Thrill, Make, Model, Length, Height, Drop, Speed, Inversions,
+            VerticalAngle, Duration, GForce
         ]
         logging.info("Parsed data successfully")
-        #print(data)
+        print(data)
 
         return data
 
-    def parse_coaster_coordinates(coaster_link):
+    ####################################################
+    # Parse a park page
+    ####################################################
+    def parse_park_page(link):
+        ## Initialize the stats ##
+        Name = City = State = Country = Status_type = Status_date = None
+
+        # Fetch the page
         try:
-            # Fetch the webpage
-            response = requests.get(coaster_link)
+            response = requests.get(link)
             response.raise_for_status()
-            page_content = response.text
+            soup = bs(response.text, "html.parser")
+            time.sleep(randint(1, 2))
 
-            # Parse the HTML content
-            soup = bs(page_content, 'html.parser')
+            try:
+                # Parse the park name
+                Name = soup.find("body").find("div", id="feature").find("h1").get_text(strip=True)
+            except Exception as e:
+                logging.error(f"Error parsing Name: {e}")
 
-            # Find the maps pop-up link
-            maps_link_tag = soup.find('a', string='Maps')
-            if maps_link_tag:
-                maps_popup_url = maps_link_tag.get('href')
+            try:
+                # Parse location metadata
+                location_section = soup.find("body").find("div", id="feature").find_all("a")
+                if location_section:
+                    City = location_section[0].get_text()
+                    State = location_section[1].get_text()
+                    Country = location_section[2].get_text()
+            except Exception as e:
+                logging.error(f"Error parsing location metadata: {e}")
 
-                # Extract coordinates from the URL
-                match = re.search(r'lat=([-\d.]+)&lng=([-\d.]+)', maps_popup_url)
-                if match:
-                    latitude = match.group(1)
-                    longitude = match.group(2)
-                    return latitude, longitude
+            try:
+                # Parse operational status
+                status_section = soup.find("body").find("div", id="feature").find("p")
+                if status_section:
+                    Status_type = status_section.find("a").get_text()
+                    Status_date = status_section.find("time").get("datetime", None)
 
-            return None  # Coordinates not found
-        except Exception as e:
-            print(f"An error occurred: {e}")
+            except Exception as e:
+                logging.error(f"Error parsing operational status: {e}")
+
+        except requests.exceptions.RequestException as e:
+            logging.critical(f"Request error: {e}")
             return None
+
+        except Exception as e:
+            logging.critical(f"Unexpected error: {e}")
+            return None
+
+        # Return the data array
+        data = [Name, City, State, Country, Status_type, Status_date]
+        logging.info("Parsed park data successfully")
+        print(data)
+
+        return data
 
     ####################################################
     # Return an array of extant coaster page links
@@ -647,6 +683,23 @@ class Parser():
     ####################################################
     def parse_visited_parks():
         print("Exporting a dataframe of visited parks and coasters to a csv")
+        coaster_columns = ["Name", "Park", "City", "State", "Country", "Status", "Status Date", "Material", "Seating", "Thrill",
+                   "Make", "Model", "Length", "Height", "Drop", "Speed", "Inversions", "VerticalAngle", "Duration",
+                   "G-Force"]
+        us_link = "https://rcdb.com/location.htm?id=59"  # List US states
+        response = requests.get(link)  # Get Response
+        soup = bs(response.text, "html.parser")  # Create Responser
+        num_extants = soup.body.find("table").select_one(
+            "tr:nth-child(1)").td.a.get_text()  # Get total number of extisting coasters in the country
+        pages = Parser.get_extant_pages(link)
+        frames = [None] * len(pages)
+        print("frames length: " + str(len(frames)))
+        for i in range(len(pages)):
+            frames[i] = Parser.parse_extant_coasters_page(pages[i])
+            time.sleep(2)
+        data_frame = pd.concat(frames)
+        data_frame.set_axis(columns, axis=1)
+        data_frame.to_csv("US_Coaster_Stats_2021.csv")
 
 
     ####################################################
