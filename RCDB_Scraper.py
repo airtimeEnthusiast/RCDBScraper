@@ -28,7 +28,7 @@ class Parser():
 
     visited_parks_and_rides = {
         "Arizona": {
-            "Castles N' Coasters": [
+            "Castles n' Coasters": [
                 "Desert Storm",
                 "Patriot"
             ]
@@ -133,8 +133,8 @@ class Parser():
                 "Tigris",
                 "SandSerpent"
             ],
-            "Disney's Animal Kingdom": ["Expedition Everest", "Primeval Whirl"],
-            "Disney's Hollywood Studios": ["Rock 'n' Roller Coaster"],
+            "Walt Disney World - Disney's Animal Kingdom": ["Expedition Everest", "Primeval Whirl"],
+            "Walt Disney World - Disney's Hollywood Studios": ["Rock 'n' Roller Coaster"],
             "SeaWorld Orlando": [
                 "Mako",
                 "Kraken",
@@ -488,11 +488,10 @@ class Parser():
         # us_url = "https://rcdb.com/location.htm?id=59"  # List of Coasters in the US
         include_visited = True
         response = requests.get(us_url)  # Create the response
-        time.sleep(randint(2, 5))
+        #time.sleep(randint(0, 2))
         soup = bs(response.text, "html.parser")  # Parse the response
         states_table = soup.find("body").find("div", class_="stdtbl cen").find("table").find("tbody").find_all(
             "tr")  # Find the table of States
-        time.sleep(randint(0, 4))
         refs = []
 
         # Extract the visited states from the dictionary keys
@@ -500,7 +499,7 @@ class Parser():
 
         for i in range(len(states_table)):  # Parse each State
             table_data = states_table[i].find_all("td")  # State table data sections
-            time.sleep(randint(0, 3))
+            time.sleep(randint(0, 2))
             td = table_data[0].find("a")  # State name and link section
             ref = "https://rcdb.com" + td.get('href')  # URL to State page
             name = td.get_text()  # State name
@@ -517,7 +516,7 @@ class Parser():
         response = requests.get(state__page_link)  # Create response
         soup = bs(response.text, "html.parser")  # Parse the response
         name = soup.find("body").find("h1").get_text()
-        time.sleep(randint(1, 2))
+        time.sleep(randint(0, 2))
         extant_ref = soup.find("table").find_all("tr")  # Find tr's within the table body
         extant_ref = extant_ref[2].find("td").find("a").get("href")  # Extract 3rd table reference to get the url href for extant parks
         extant_ref = "https://rcdb.com" + extant_ref  # Format url
@@ -528,15 +527,34 @@ class Parser():
     # Return a link to a State's additional amusement park page
     ####################################################
     def get_additional_park_page_links(state_link):
-        response = requests.get(state_link)  # Create response
-        soup = bs(response.text, "html.parser")  # Parse the response
-        #time.sleep(randint(0, 5))
-        #name = soup.find("body").find("h1").get_text()
-        pagination = soup.find("body").find("section").find("div", id="rfoot")
-        pagination = pagination.find_all("a")
-        # If there are two pages
-        additional_park_link = "https://rcdb.com" + pagination[0].get("href")
-        return additional_park_link
+        try:
+            # Fetch the page
+            response = requests.get(state_link)
+            response.raise_for_status()  # Raise an error for HTTP issues
+            soup = bs(response.text, "html.parser")
+            time.sleep(randint(0, 2))
+
+            # Parse pagination section
+            pagination = soup.find("body").find("section").find("div", id="rfoot")
+            if not pagination:
+                raise ValueError("Pagination section not found.")
+
+            # Extract additional park link
+            pagination_links = pagination.find_all("a")
+            if not pagination_links or len(pagination_links) < 1:
+                raise ValueError("No additional park links found.")
+
+            additional_park_link = "https://rcdb.com" + pagination_links[0].get("href")
+            print("Additional page found at: ", additional_park_link)
+            return additional_park_link
+
+        except requests.exceptions.RequestException as e:
+            print(f"HTTP request error: {e}")
+        except ValueError as e:
+            print(f"Parsing error: {e}")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+        return None
 
 
     ####################################################
@@ -545,7 +563,7 @@ class Parser():
     def get_park_page_links(link, visited_parks_and_rides):
         response = requests.get(link)
         soup = bs(response.text, "html.parser")
-        time.sleep(randint(2, 5))
+        time.sleep(randint(0, 2))
         park_table = soup.find("body").find("div", class_="stdtbl rer").find("table").find("tbody").find_all(
             "tr")  # Find the table of parks
         refs = []
@@ -611,7 +629,7 @@ class Parser():
         coaster_columns = ["Name", "Park", "City", "State", "Country", "Status", "Status Date", "Material", "Seating", "Thrill",
                    "Make", "Model", "Length", "Height", "Drop", "Speed", "Inversions", "VerticalAngle", "Duration",
                    "G-Force"]
-        park_columns = ["Name", "Park", "City", "State", "Country", "Status", "Status Date"]
+        park_columns = ['Name', 'City', 'State', 'Country', 'Status', 'Status Date']
 
         us_link = "https://rcdb.com/location.htm?id=59"  # List US states
         response = requests.get(us_link)  # Get Response
@@ -627,22 +645,43 @@ class Parser():
         # Store all the state page links
         state_links = Parser.get_state_page_links(us_link,Parser.visited_parks_and_rides)
 
-        # For each state page
+        # Store all the pages from each state that have an index of links to parks
+        state_park_index_links = []
+        # For each state page get the links to the park pages
+        for state_link in state_links:
+            first_park_page = Parser.get_state_extant_parks_link(state_link)
+            second_park_page = Parser.get_additional_park_page_links(first_park_page)
+            # Add park pages
+            state_park_index_links.append(first_park_page)
+            # If there is a second park page
+            if second_park_page is not None:
+                state_park_index_links.append(second_park_page)
 
-        # Store all the links to parks
+        # Store each park page link
         park_links = []
-        # Retrieve all the parks from each set of state pages
-        for state in state_links:
-            # If there is a second page of parks
-            print("poop")
 
+        # Store each park meta data
+        for park_link in state_park_index_links:
+            print("Next Parks Link: ", park_link)
+            next_park_links = Parser.get_park_page_links(park_link, Parser.visited_parks_and_rides)
+            # Add the set of next parks to the park_links
+            for next_park_link in next_park_links:
+                park_links.append(next_park_link)
+
+
+        # Parse the park data and store in a dataframe
+        parks_data = []
+        for park_link in park_links:
+            parks_data.append(Parser.parse_park_page(park_link))
+
+        park_dataframe = pd.DataFrame(parks_data, columns=col_names)
 
         # Parse the coasters and export a coaster dataframe
 
 
         #data_frame = pd.concat(park_frames)
-        #data_frame.set_axis(park_columns, axis=1)
-        #data_frame.to_csv("US_Visited_Park.csv")
+        data_frame.set_axis(park_columns, axis=1)
+        data_frame.to_csv("US_Visited_Park.csv")
 
 
     ####################################################
@@ -760,13 +799,13 @@ class Parser():
         #extant_ref = "https://rcdb.com" + extant_ref  # Format url
         #print(name, "'s extant coasters are located at: ", extant_ref)
         #return extant_ref
-    
+
 #####################################################
 # Main
 #####################################################
 def main():
     print(str(int(len("hello"))))
-    Parser.print_visited_parks_and_rides(Parser.visited_parks_and_rides)
+    Parser.parse_visited_parks()
 
 if __name__ == '__main__':
     main()
