@@ -573,7 +573,7 @@ class Parser():
 
         for i in range(len(park_table)):  # Parse each State
             table_data = park_table[i].find_all("td")  # State table data sections
-            time.sleep(randint(0, 3))
+            time.sleep(randint(0, 2))
             td = table_data[1].find("a")  # State name and link section
             ref = "https://rcdb.com" + td.get('href')  # URL to State page
             name = td.get_text()  # State name
@@ -610,7 +610,7 @@ class Parser():
             for row in ride_table:  # Iterate through the ride table
                 table_data = row.find_all("td")
                 coaster_td = table_data[1].find("a")  # Coaster name and link section
-                time.sleep(randint(0, 3))
+                time.sleep(randint(0, 2))
                 coaster_name = coaster_td.get_text().strip() if coaster_td else None  # Coaster name
                 ref = "https://rcdb.com" + coaster_td.get('href') if coaster_td else None  # Coaster URL
 
@@ -618,7 +618,6 @@ class Parser():
                 if coaster_name in all_parks[park_name]:
                     refs.append(ref)  # Add only the URL
                     print(f"Park: {park_name}, Coaster: {coaster_name}, URL: {ref}")
-
         return refs
 
     ####################################################
@@ -673,15 +672,19 @@ class Parser():
         parks_data = []
         for park_link in park_links:
             parks_data.append(Parser.parse_park_page(park_link))
+        park_dataframe = pd.DataFrame(parks_data, columns=park_columns)
+        park_dataframe.set_axis(park_columns, axis=1)
+        park_dataframe.to_csv("Visited_Parklist.csv")
 
-        park_dataframe = pd.DataFrame(parks_data, columns=col_names)
-
-        # Parse the coasters and export a coaster dataframe
-
-
-        #data_frame = pd.concat(park_frames)
-        data_frame.set_axis(park_columns, axis=1)
-        data_frame.to_csv("US_Visited_Park.csv")
+        # Parse coaster data and store in a dataframe
+        coaster_data = []
+        for park_link in park_links:
+            next_coaster_links = Parser.get_park_coaster_page_links(park_link, Parser.visited_parks_and_rides)
+            for next_coaster_link in next_coaster_links:
+                coaster_data.append(Parser.parse_coaster(next_coaster_link))
+        coaster_dataframe = pd.DataFrame(coaster_data, columns=coaster_columns)
+        coaster_dataframe.set_axis(coaster_columns, axis=1)
+        coaster_dataframe.to_csv("Visited_Coasterlist.csv")
 
 
     ####################################################
