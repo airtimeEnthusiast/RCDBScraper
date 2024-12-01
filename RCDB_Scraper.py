@@ -37,7 +37,7 @@ class Parser():
             "Belmont Park": ["Giant Dipper"],
             "California's Great America": [
                 "Gold Striker",
-                "Railblazer",
+                "RailBlazer",
                 "Invertigo",
                 "Lucy's Crabbie Cabbies",
                 "Patriot",
@@ -132,6 +132,7 @@ class Parser():
                 "Cobra's Curse",
                 "Tigris",
                 "SandSerpent"
+                "Iron Gwazi"
             ],
             "Walt Disney World - Disney's Animal Kingdom": ["Expedition Everest", "Primeval Whirl"],
             "Walt Disney World - Disney's Hollywood Studios": ["Rock 'n' Roller Coaster"],
@@ -141,6 +142,7 @@ class Parser():
                 "Manta",
                 "Journey to Atlantis",
                 "Pipeline the Surf Coaster"
+                "Ice Breaker"
             ],
             "Universal's Islands of Adventure": [
                 "The Incredible Hulk Coaster",
@@ -556,7 +558,6 @@ class Parser():
             print(f"Unexpected error: {e}")
         return None
 
-
     ####################################################
     # Return an array of links to each park from a state page
     ####################################################
@@ -590,34 +591,42 @@ class Parser():
         response = requests.get(park_page)
         soup = bs(response.text, "html.parser")
 
+        # Store references to coaster pages
+        refs = []
         # Find park title
         park_td = soup.find("body").find("div", id="demo").find("div", id="feature").find("div").find("h1")
 
-        # Find ride table
-        ride_table = soup.find("body").find("div", class_="stdtbl ctr").find("table").find("tbody").find_all(
-            "tr")  # Rides table
-        time.sleep(randint(0, 3))
-        refs = []
+        # Find all ride tables on a page
+        ride_tables = soup.find("body").find_all("section")
+        for ride_table in ride_tables:
+            if ride_table.find("h4"):
+                table_tl = ride_table.find("h4").get_text()
+                # Find a valid ride table header
+                if (
+                    "Roller Coasters Under Construction: " in table_tl or
+                    "Operating Roller Coasters: " in table_tl or
+                    "Defunct Roller Coasters: " in table_tl or
+                    "SBNO Roller Coasters: " in table_tl
+                ):
+                    ride_table = ride_table.find("div", class_="stdtbl ctr").find("table").find("tbody").find_all("tr")
+                    # Flatten the dictionary to get a mapping of parks to coasters
+                    all_parks = {
+                        park: set(coasters) for state, parks in visited_parks_and_rides.items() for park, coasters in parks.items()
+                    }
+                    park_name = park_td.get_text().strip() if park_td else None  # Park name
 
-        # Flatten the dictionary to get a mapping of parks to coasters
-        all_parks = {
-            park: set(coasters) for state, parks in visited_parks_and_rides.items() for park, coasters in parks.items()
-        }
+                    if park_name in all_parks:  # Check if the park is in visited parks
+                        for row in ride_table:  # Iterate through the ride table
+                            table_data = row.find_all("td")
+                            coaster_td = table_data[1].find("a")  # Coaster name and link section
+                            time.sleep(randint(0, 2))
+                            coaster_name = coaster_td.get_text().strip() if coaster_td else None  # Coaster name
+                            ref = "https://rcdb.com" + coaster_td.get('href') if coaster_td else None  # Coaster URL
 
-        park_name = park_td.get_text().strip() if park_td else None  # Park name
-
-        if park_name in all_parks:  # Check if the park is in visited parks
-            for row in ride_table:  # Iterate through the ride table
-                table_data = row.find_all("td")
-                coaster_td = table_data[1].find("a")  # Coaster name and link section
-                time.sleep(randint(0, 2))
-                coaster_name = coaster_td.get_text().strip() if coaster_td else None  # Coaster name
-                ref = "https://rcdb.com" + coaster_td.get('href') if coaster_td else None  # Coaster URL
-
-                # Check if the coaster is in the visited park's coaster list
-                if coaster_name in all_parks[park_name]:
-                    refs.append(ref)  # Add only the URL
-                    print(f"Park: {park_name}, Coaster: {coaster_name}, URL: {ref}")
+                            # Check if the coaster is in the visited park's coaster list
+                            if coaster_name in all_parks[park_name]:
+                                refs.append(ref)  # Add only the URL
+                                print(f"Park: {park_name}, Coaster: {coaster_name}, URL: {ref}")
         return refs
 
     ####################################################
