@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup as bs
 from random import seed
 from random import randint
 import logging
+import hashlib
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
@@ -296,7 +297,7 @@ class Parser():
     def parse_coaster(coaster_link):
 
         ## Initialize the stats ##
-        Name = Park = City = State = Country = None
+        ID = Name = Park = City = State = Country = None
         Status_type = Status_date = Material = Positioning = Thrill = None
         Make = Model = Length = Height = Drop = Speed = Inversions = None
         VerticalAngle = Duration = GForce = Link = None
@@ -313,11 +314,12 @@ class Parser():
                 Name = stat_sections[0].select_one("div:nth-child(1)").div.div.h1.get_text(strip=True)
             except Exception as e:
                 logging.error(f"Error parsing Name: {e}")
+                # Add Link
                 Link = coaster_link
 
             try:
                 # Parse location metadata
-                time.sleep(randint(0, 2))
+                #time.sleep(randint(0, 2))
                 metas = stat_sections[0].select_one("div:nth-child(1)").div.div.find_all("a")
                 if metas:
                     Park = metas[0].get_text(strip=True)
@@ -365,7 +367,7 @@ class Parser():
             try:
                 # Parse track stats
                 stats_table = soup.find('table', {'class': 'stat-tbl'})
-                #time.sleep(randint(0, 2))
+                time.sleep(randint(0, 2))
                 if stats_table:
                     specs = list(stats_table.strings)
                     for i in range(len(specs)):
@@ -396,9 +398,19 @@ class Parser():
             logging.critical(f"Unexpected error: {e}")
             return None
 
+        # Hash a deterministic ID
+        try:
+            if Name is not None and Park is not None:
+                # Combine park and coaster name for a unique key
+                unique_string = f"{Park}-{Name}".lower().strip()
+                ID = hashlib.md5(unique_string.encode()).hexdigest()  # Generate a hash
+        except Exception as e:
+            logging.critical(f"Unable to generate ID: {e}")
+            return None
+
         # Return the data array
         data = [
-            Name, Park, City, State, Country, Status_type, Status_date, Material,
+            ID, Name, Park, City, State, Country, Status_type, Status_date, Material,
             Positioning, Thrill, Make, Model, Length, Height, Drop, Speed, Inversions,
             VerticalAngle, Duration, GForce, Link
         ]
@@ -412,14 +424,14 @@ class Parser():
     ####################################################
     def parse_park_page(link):
         ## Initialize the stats ##
-        Name = City = State = Country = Status_type = Status_date =  Link = None
+        ID = Name = City = State = Country = Status_type = Status_date = Link = None
 
         # Fetch the page
         try:
             response = requests.get(link)
             response.raise_for_status()
             soup = bs(response.text, "html.parser")
-            #time.sleep(randint(0, 2))
+            time.sleep(randint(0, 2))
 
             try:
                 # Parse the park name
@@ -455,8 +467,18 @@ class Parser():
             logging.critical(f"Unexpected error: {e}")
             return None
 
+        # Hash a deterministic ID
+        try:
+            if Name is not None and Name is not None:
+                # Combine park and coaster name for a unique key
+                unique_string = f"{Name}".lower().strip()
+                ID = hashlib.md5(unique_string.encode()).hexdigest()  # Generate a hash
+        except Exception as e:
+            logging.critical(f"Unable to generate ID: {e}")
+            return None
+
         # Return the data array
-        data = [Name, City, State, Country, Status_type, Status_date, Link]
+        data = [ID, Name, City, State, Country, Status_type, Status_date, Link]
         logging.info("Parsed park data successfully")
         print(data)
 
@@ -482,7 +504,7 @@ class Parser():
                 "href")
             prev_page = _[i]
             print("new page: " + _[i])
-            time.sleep(randint(0, 2))
+            #time.sleep(randint(0, 2))
         return _
 
     ####################################################
@@ -566,7 +588,7 @@ class Parser():
     def get_park_page_links(link, visited_parks_and_rides):
         response = requests.get(link)
         soup = bs(response.text, "html.parser")
-        time.sleep(randint(0, 2))
+        #time.sleep(randint(0, 2))
         park_table = soup.find("body").find("div", class_="stdtbl rer").find("table").find("tbody").find_all(
             "tr")  # Find the table of parks
         refs = []
@@ -647,71 +669,74 @@ class Parser():
     ####################################################
     def parse_visited_parks():
         print("Exporting a dataframe of visited parks and coasters to a csv")
-        coaster_columns = ["Name", "Park", "City", "State", "Country", "Status", "Status Date", "Material", "Seating", "Thrill",
-                   "Make", "Model", "Length", "Height", "Drop", "Speed", "Inversions", "VerticalAngle", "Duration",
-                   "G-Force", "Link"]
-        park_columns = ['Name', 'City', 'State', 'Country', 'Status', 'Status Date', 'Link']
+        coaster_columns = ["ID", "Name", "Park", "City", "State", "Country", "Status", "Status Date", "Material",
+                           "Seating", "Thrill",
+                           "Make", "Model", "Length", "Height", "Drop", "Speed", "Inversions", "VerticalAngle",
+                           "Duration", "G-Force", "Link"]
+        park_columns = ['ID', 'Name', 'City', 'State', 'Country', 'Status', 'Status Date', 'Link', 'Coaster_IDs']
 
         us_link = "https://rcdb.com/location.htm?id=59"  # List US states
         response = requests.get(us_link)  # Get Response
         soup = bs(response.text, "html.parser")  # Create Responser
         num_parks, num_coasters = Parser.count_parks_and_rides(Parser.visited_parks_and_rides)
-        park_frames = [None] * num_parks
-        coaster_frames = [None] * num_coasters
-        print("park frames length: " + str(len(park_frames)))
-        print("coaster frames length: " + str(len(coaster_frames)))
+
+        print("Number of parks:", num_parks)
+        print("Number of coasters:", num_coasters)
 
         # Parse the parks and export a parks dataframe
-
-        # Store all the state page links
-        state_links = Parser.get_state_page_links(us_link,Parser.visited_parks_and_rides)
-
-        # Store all the pages from each state that have an index of links to parks
+        state_links = Parser.get_state_page_links(us_link, Parser.visited_parks_and_rides)
         state_park_index_links = []
-        # For each state page get the links to the park pages
+
         for state_link in state_links:
             first_park_page = Parser.get_state_extant_parks_link(state_link)
             second_park_page = Parser.get_additional_park_page_links(first_park_page)
-            # Add park pages
             state_park_index_links.append(first_park_page)
-            # If there is a second park page
             if second_park_page is not None:
                 state_park_index_links.append(second_park_page)
 
-        # Store each park page link
         park_links = []
-
-        # Store each park meta data
         for park_link in state_park_index_links:
-            #print("Next Parks Link: ", park_link)
             next_park_links = Parser.get_park_page_links(park_link, Parser.visited_parks_and_rides)
-            # Add the set of next parks to the park_links
-            for next_park_link in next_park_links:
-                park_links.append(next_park_link)
-
-
-        # Parse the park data and store in a dataframe
-        parks_data = []
-        for park_link in park_links:
-            parks_data.append(Parser.parse_park_page(park_link))
-        park_dataframe = pd.DataFrame(parks_data, columns=park_columns)
-        park_dataframe.set_axis(park_columns, axis=1)
-        park_dataframe.to_csv("Visited_Parklist.csv")
-        # Export to JSON
-        park_dataframe.to_json("Visited_Parklist.json", orient="records", indent=4)
+            park_links.extend(next_park_links)
 
         # Parse coaster data and store in a dataframe
         coaster_data = []
+        coaster_to_park_mapping = {}  # Map coaster IDs to parks
+
         for park_link in park_links:
             next_coaster_links = Parser.get_park_coaster_page_links(park_link, Parser.visited_parks_and_rides)
             for next_coaster_link in next_coaster_links:
-                coaster_data.append(Parser.parse_coaster(next_coaster_link))
+                coaster = Parser.parse_coaster(next_coaster_link)
+                coaster_data.append(coaster)
+                coaster_id = coaster[0]  # The first column is the coaster ID
+                coaster_park = coaster[2]  # Assuming "Park" is the third column
+                if coaster_park not in coaster_to_park_mapping:
+                    coaster_to_park_mapping[coaster_park] = []
+                coaster_to_park_mapping[coaster_park].append(coaster_id)
+
+        # Create coaster dataframe
         coaster_dataframe = pd.DataFrame(coaster_data, columns=coaster_columns)
-        coaster_dataframe.set_axis(coaster_columns, axis=1)
         coaster_dataframe.to_csv("Visited_Coasterlist.csv")
-        # Export to JSON
         coaster_dataframe.to_json("Visited_Coasterlist.json", orient="records", indent=4)
 
+        # Parse parks data and add Coaster_IDs
+        parks_data = []
+        for park_link in park_links:
+            park = Parser.parse_park_page(park_link)
+            # Handle None case
+            if park is None:
+                print(f"Failed to parse park from link: {park_link}")
+                continue
+            park_name = park[1]  # Assuming park Name is the second field
+            # Add coaster IDs for this park
+            coaster_ids = coaster_to_park_mapping.get(park_name, [])
+            park.append(coaster_ids)
+            parks_data.append(park)
+
+        # Create park dataframe
+        park_dataframe = pd.DataFrame(parks_data, columns=park_columns)
+        park_dataframe.to_csv("Visited_Parklist.csv")
+        park_dataframe.to_json("Visited_Parklist.json", orient="records", indent=4)
 
     ####################################################
     # Count the number of parks and rides
