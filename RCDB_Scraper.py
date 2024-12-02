@@ -30,7 +30,7 @@ class Parser():
         "Arizona": {
             "Castles n' Coasters": [
                 "Desert Storm",
-                "Patriot"
+                "Patriot",
             ]
         },
         "California": {
@@ -46,17 +46,16 @@ class Parser():
                 "Grizzly",
                 "Psycho Mouse",
                 "Woodstock Express",
-                "Vortex"
             ],
             "Disney California Adventure Park": [
                 "Incredicoaster",
-                "Goofy's Sky School"
+                "Goofy's Sky School",
             ],
             "Disneyland": [
                 "Space Mountain",
                 "Matterhorn Bobsleds",
                 "Big Thunder Mountain Railroad",
-                "Chip & Dale's Gadget Coaster"
+                "Chip & Dale’s Gadget Coaster",
             ],
             "Gilroy Gardens Family Theme Park": ["Quicksilver Express", "Timber Twister"],
             "Happy Hollow Park and Zoo": ["Pacific Fruit Express"],
@@ -68,42 +67,43 @@ class Parser():
                 "Xcelerator",
                 "Sierra Sidewinder",
                 "Jaguar!",
+                "Pony Express",
                 "Montezooma's Revenge",
                 "Coast Rider",
-                "Timberline Twister"
+                "Timberline Twister",
             ],
-            "Legoland California": ["The Dragon", "Coastersaurus", "Technic Coaster"],
+            "Legoland California": ["The Dragon", "Coastersaurus", "Technic Coaster", "Dragon"],
             "Oakland Zoo": ["Tiger Trek"],
-            "Pacific Park": ["West Coaster"],
+            "Pacific Park": ["Santa Monica West Coaster"],
             "Santa Cruz Beach Boardwalk": ["Giant Dipper", "Undertow", "Hurricane", "Sea Serpent"],
-            "SeaWorld San Diego": ["Manta", "Journey to Atlantis", "Electric Eel", "Emperor", "Arctic Rescue",
-                                   "Tidal Twister"],
+            "SeaWorld San Diego": ["Manta", "Journey to Atlantis", "Electric Eel", "Emperor", "Arctic Rescue","Tidal Twister"],
             "Six Flags Discovery Kingdom": [
                 "Medusa",
                 "Kong",
                 "Superman Ultimate Flight",
-                "The Joker",
-                "Boomerang Coast to Coaster",
-                "Batman: The Ride",
+                "Joker",
+                "Boomerang",
+                "Batman The Ride",
                 "Flash: Vertical Velocity",
                 "Roadrunner Express",
                 "Pandemonium",
                 "Roar",
                 "Cobra",
-                "Harley Quinn Crazy Coaster"
+                "Harley Quinn Crazy Coaster",
             ],
             "Six Flags Magic Mountain": [
                 "Twisted Colossus",
                 "X2",
                 "Tatsu",
                 "Goliath",
-                "Scream",
+                "Scream!",
+                "Gold Rusher",
                 "Batman The Ride",
                 "Riddler's Revenge",
                 "Apocalypse the Ride",
                 "Ninja",
                 "Viper",
-                "New Revolution"
+                "New Revolution",
                 "Canyon Blaster",
                 "Wonder Woman Flight of Courage",
                 "West Coast Racers",
@@ -112,9 +112,9 @@ class Parser():
                 "Full Throttle",
                 "Superman: Escape from Krypton",
                 "Colossus",
-                "Green Lantern: First Flight"
+                "Green Lantern: First Flight",
             ],
-            "Universal Studios Hollywood": ["Revenge of the Mummy"]
+            "Universal Studios Hollywood": ["Revenge of the Mummy the Ride"]
         },
         "Colorado": {
             "Glenwood Caverns Adventure Park": [
@@ -131,8 +131,8 @@ class Parser():
                 "Scorpion",
                 "Cobra's Curse",
                 "Tigris",
-                "SandSerpent"
-                "Iron Gwazi"
+                "SandSerpent",
+                "Iron Gwazi",
             ],
             "Walt Disney World - Disney's Animal Kingdom": ["Expedition Everest", "Primeval Whirl"],
             "Walt Disney World - Disney's Hollywood Studios": ["Rock 'n' Roller Coaster"],
@@ -141,18 +141,19 @@ class Parser():
                 "Kraken",
                 "Manta",
                 "Journey to Atlantis",
-                "Pipeline the Surf Coaster"
-                "Ice Breaker"
+                "Pipeline the Surf Coaster",
+                "Ice Breaker",
             ],
-            "Universal's Islands of Adventure": [
-                "The Incredible Hulk Coaster",
+            "Universal Studios Islands of Adventure": [
+                "Incredible Hulk",
                 "Hagrid's Magical Creatures Motorbike Adventure",
                 "Flight of the Hippogriff",
-                "VelociCoaster"
+                "VelociCoaster",
             ],
             "Universal Studios Florida": [
-                "Hollywood Rip Ride Rockit",
-                "Revenge of the Mummy"
+                "Hollywood Rip, Ride, Rockit",
+                "Revenge of the Mummy",
+                "Harry Potter and the Escape from Gringotts",
             ]
         },
         "Missouri": {
@@ -162,7 +163,7 @@ class Parser():
                 "Wildfire",
                 "Powder Keg: A Blast in the Wilderness",
                 "Thunderation",
-                "Fire In The Hole"
+                "Fire In The Hole",
             ]
         },
         "Nevada": {
@@ -181,19 +182,19 @@ class Parser():
                 "Joker",
                 "Batman The Ride",
                 "Dark Knight",
-                "Jersey Devil Coaster"
+                "Jersey Devil Coaster",
             ],
             "Nickelodeon Universe Theme Park": [
                 "Nickelodeon Slime Streak",
                 "Sandy’s Blasting Bronco",
                 "Shredder",
-                "TMNT Shellraiser"
+                "TMNT Shellraiser",
             ]
         },
         "Ohio": {
             "Cedar Point": [
                 "Millennium Force",
-                "Top Thrill Dragster",
+                "Top Thrill 2",
                 "Maverick",
                 "Steel Vengeance",
                 "Magnum XL-200",
@@ -206,7 +207,7 @@ class Parser():
                 "Gemini",
                 "Iron Dragon",
                 "Wicked Twister",
-                "Corkscrew"
+                "Corkscrew",
             ],
             "Kings Island": [
                 "Diamondback",
@@ -220,7 +221,8 @@ class Parser():
                 "Adventure Express",
                 "Racer",
                 "Vortex",
-                "Firehawk"
+                "Firehawk",
+                "Woodstock’s Air Rail"
             ]
         },
         "Pennsylvania": {
@@ -235,7 +237,6 @@ class Parser():
                 "Comet",
                 "Sooperdooperlooper",
                 "Laff Trakk",
-                "Cocoa Cruiser"
             ],
         },
         "Texas": {
@@ -247,7 +248,7 @@ class Parser():
                 "Batman The Ride",
                 "Superman Krypton Coaster",
                 "Wonder Woman Golden Lasso Coaster",
-                "Dr. Diabolical's Cliffhanger"
+                "Dr. Diabolical's Cliffhanger",
             ],
             "Six Flags Over Texas": [
                 "Batman The Ride",
@@ -263,14 +264,14 @@ class Parser():
                 "Judge Roy Scream",
                 "La Vibora",
                 "Aquaman: Power Wave",
-                "Pandemonium"
+                "Pandemonium",
             ],
             "SeaWorld San Antonio": [
                 "Great White",
                 "Journey to Atlantis",
                 "Steel Eel",
                 "Texas Stingray",
-                "Wave Breaker: The Rescue Coaster"
+                "Wave Breaker: The Rescue Coaster",
             ]
         },
         "Utah": {
@@ -283,7 +284,7 @@ class Parser():
                 "Roller Coaster",
                 "Primordial",
                 "Wild Mouse",
-                "Roller Coaster"
+                "Roller Coaster",
             ]
         }
     }
@@ -298,7 +299,7 @@ class Parser():
         Name = Park = City = State = Country = None
         Status_type = Status_date = Material = Positioning = Thrill = None
         Make = Model = Length = Height = Drop = Speed = Inversions = None
-        VerticalAngle = Duration = GForce = None
+        VerticalAngle = Duration = GForce = Link = None
 
         # Fetch the page
         try:
@@ -312,10 +313,11 @@ class Parser():
                 Name = stat_sections[0].select_one("div:nth-child(1)").div.div.h1.get_text(strip=True)
             except Exception as e:
                 logging.error(f"Error parsing Name: {e}")
+                Link = coaster_link
 
             try:
                 # Parse location metadata
-                time.sleep(randint(1, 2))
+                time.sleep(randint(0, 2))
                 metas = stat_sections[0].select_one("div:nth-child(1)").div.div.find_all("a")
                 if metas:
                     Park = metas[0].get_text(strip=True)
@@ -339,7 +341,7 @@ class Parser():
                 # Parse type (Material, Positioning, Thrill)
                 Types = stat_sections[0].select_one("div:nth-child(1)").div.ul.find_all("li")
                 if Types:
-                    time.sleep(randint(1, 2))
+                    #time.sleep(randint(0, 2))
                     Material = Types[1].a.get_text(strip=True) if len(Types) > 1 else None
                     Positioning = Types[2].a.get_text(strip=True) if len(Types) > 2 else None
                     Thrill = Types[3].a.get_text(strip=True) if len(Types) > 3 else None
@@ -349,7 +351,7 @@ class Parser():
             try:
                 # Parse Make and Model
                 Types = stat_sections[0].select_one("div:nth-child(1)").div.find("div", class_="scroll")
-                time.sleep(randint(1, 2))
+                #time.sleep(randint(0, 2))
                 if Types:
                     TypesCheck = Types.get_text().split(":")
                     for i, t in enumerate(Types.find_all("a")):
@@ -363,7 +365,7 @@ class Parser():
             try:
                 # Parse track stats
                 stats_table = soup.find('table', {'class': 'stat-tbl'})
-                time.sleep(randint(1, 2))
+                #time.sleep(randint(0, 2))
                 if stats_table:
                     specs = list(stats_table.strings)
                     for i in range(len(specs)):
@@ -398,10 +400,10 @@ class Parser():
         data = [
             Name, Park, City, State, Country, Status_type, Status_date, Material,
             Positioning, Thrill, Make, Model, Length, Height, Drop, Speed, Inversions,
-            VerticalAngle, Duration, GForce
+            VerticalAngle, Duration, GForce, Link
         ]
-        logging.info("Parsed data successfully")
-        print(data)
+        #logging.info("Parsed data successfully")
+        #print(data)
 
         return data
 
@@ -410,14 +412,14 @@ class Parser():
     ####################################################
     def parse_park_page(link):
         ## Initialize the stats ##
-        Name = City = State = Country = Status_type = Status_date = None
+        Name = City = State = Country = Status_type = Status_date =  Link = None
 
         # Fetch the page
         try:
             response = requests.get(link)
             response.raise_for_status()
             soup = bs(response.text, "html.parser")
-            time.sleep(randint(1, 2))
+            #time.sleep(randint(0, 2))
 
             try:
                 # Parse the park name
@@ -454,7 +456,7 @@ class Parser():
             return None
 
         # Return the data array
-        data = [Name, City, State, Country, Status_type, Status_date]
+        data = [Name, City, State, Country, Status_type, Status_date, Link]
         logging.info("Parsed park data successfully")
         print(data)
 
@@ -480,7 +482,7 @@ class Parser():
                 "href")
             prev_page = _[i]
             print("new page: " + _[i])
-            time.sleep(randint(1, 5))
+            time.sleep(randint(0, 2))
         return _
 
     ####################################################
@@ -501,13 +503,13 @@ class Parser():
 
         for i in range(len(states_table)):  # Parse each State
             table_data = states_table[i].find_all("td")  # State table data sections
-            time.sleep(randint(0, 2))
+            #time.sleep(randint(0, 2))
             td = table_data[0].find("a")  # State name and link section
             ref = "https://rcdb.com" + td.get('href')  # URL to State page
             name = td.get_text()  # State name
             if not include_visited or name in visited_states:  # Check if the state is in visited states
                 refs.append(ref)  # Populate reference array with new URL reference
-                print(f"The state of {name} is at {ref}")
+                #print(f"The state of {name} is at {ref}")
         return refs
 
     #####################################################
@@ -518,11 +520,11 @@ class Parser():
         response = requests.get(state__page_link)  # Create response
         soup = bs(response.text, "html.parser")  # Parse the response
         name = soup.find("body").find("h1").get_text()
-        time.sleep(randint(0, 2))
+        #time.sleep(randint(0, 2))
         extant_ref = soup.find("table").find_all("tr")  # Find tr's within the table body
         extant_ref = extant_ref[2].find("td").find("a").get("href")  # Extract 3rd table reference to get the url href for extant parks
         extant_ref = "https://rcdb.com" + extant_ref  # Format url
-        print(name, "'s extant coasters are located at: ", extant_ref)
+        #print(name, "'s extant coasters are located at: ", extant_ref)
         return extant_ref
 
     ####################################################
@@ -534,7 +536,7 @@ class Parser():
             response = requests.get(state_link)
             response.raise_for_status()  # Raise an error for HTTP issues
             soup = bs(response.text, "html.parser")
-            time.sleep(randint(0, 2))
+            #time.sleep(randint(0, 2))
 
             # Parse pagination section
             pagination = soup.find("body").find("section").find("div", id="rfoot")
@@ -547,7 +549,7 @@ class Parser():
                 raise ValueError("No additional park links found.")
 
             additional_park_link = "https://rcdb.com" + pagination_links[0].get("href")
-            print("Additional page found at: ", additional_park_link)
+            #print("Additional page found at: ", additional_park_link)
             return additional_park_link
 
         except requests.exceptions.RequestException as e:
@@ -574,13 +576,13 @@ class Parser():
 
         for i in range(len(park_table)):  # Parse each State
             table_data = park_table[i].find_all("td")  # State table data sections
-            time.sleep(randint(0, 2))
+            #time.sleep(randint(0, 2))
             td = table_data[1].find("a")  # State name and link section
             ref = "https://rcdb.com" + td.get('href')  # URL to State page
             name = td.get_text()  # State name
             if name in all_parks:  # Check if park name is in visited parks
                 refs.append(ref)  # Populate reference array with new URL reference
-                print(f"The park {name} is at {ref}")
+                #print(f"The park {name} is at {ref}")
 
         return refs
 
@@ -608,6 +610,7 @@ class Parser():
                     "Defunct Roller Coasters: " in table_tl or
                     "SBNO Roller Coasters: " in table_tl
                 ):
+                    #time.sleep(randint(0, 2))
                     ride_table = ride_table.find("div", class_="stdtbl ctr").find("table").find("tbody").find_all("tr")
                     # Flatten the dictionary to get a mapping of parks to coasters
                     all_parks = {
@@ -619,14 +622,24 @@ class Parser():
                         for row in ride_table:  # Iterate through the ride table
                             table_data = row.find_all("td")
                             coaster_td = table_data[1].find("a")  # Coaster name and link section
-                            time.sleep(randint(0, 2))
-                            coaster_name = coaster_td.get_text().strip() if coaster_td else None  # Coaster name
-                            ref = "https://rcdb.com" + coaster_td.get('href') if coaster_td else None  # Coaster URL
+                            #time.sleep(randint(0, 2))
+                            if not coaster_td or not coaster_td.get_text(strip=True):
+                                print("No valid coaster name found.")
+                                continue
+                            coaster_name = coaster_td.get_text(strip=True).lower()  # Coaster name
+                            ref = "https://rcdb.com" + coaster_td.get('href') if coaster_td else None  # Coaster URL d
+                            # Check each coaster in the visited list for the park
+                            for visited_coaster in all_parks[park_name]:
+                                # Normalize visited coaster name
+                                normalized_visited_coaster = visited_coaster.strip().lower()
 
-                            # Check if the coaster is in the visited park's coaster list
-                            if coaster_name in all_parks[park_name]:
-                                refs.append(ref)  # Add only the URL
-                                print(f"Park: {park_name}, Coaster: {coaster_name}, URL: {ref}")
+                                # Compare with extracted coaster name
+                                if coaster_name == normalized_visited_coaster:
+                                    refs.append(ref)
+                                    print(f"Match found! Park: {park_name}, Coaster: {coaster_name}, URL: {ref}")
+                                    break
+                            else:
+                                print(f"No match for {coaster_name}!")
         return refs
 
     ####################################################
@@ -636,8 +649,8 @@ class Parser():
         print("Exporting a dataframe of visited parks and coasters to a csv")
         coaster_columns = ["Name", "Park", "City", "State", "Country", "Status", "Status Date", "Material", "Seating", "Thrill",
                    "Make", "Model", "Length", "Height", "Drop", "Speed", "Inversions", "VerticalAngle", "Duration",
-                   "G-Force"]
-        park_columns = ['Name', 'City', 'State', 'Country', 'Status', 'Status Date']
+                   "G-Force", "Link"]
+        park_columns = ['Name', 'City', 'State', 'Country', 'Status', 'Status Date', 'Link']
 
         us_link = "https://rcdb.com/location.htm?id=59"  # List US states
         response = requests.get(us_link)  # Get Response
@@ -670,7 +683,7 @@ class Parser():
 
         # Store each park meta data
         for park_link in state_park_index_links:
-            print("Next Parks Link: ", park_link)
+            #print("Next Parks Link: ", park_link)
             next_park_links = Parser.get_park_page_links(park_link, Parser.visited_parks_and_rides)
             # Add the set of next parks to the park_links
             for next_park_link in next_park_links:
@@ -684,6 +697,8 @@ class Parser():
         park_dataframe = pd.DataFrame(parks_data, columns=park_columns)
         park_dataframe.set_axis(park_columns, axis=1)
         park_dataframe.to_csv("Visited_Parklist.csv")
+        # Export to JSON
+        park_dataframe.to_json("Visited_Parklist.json", orient="records", indent=4)
 
         # Parse coaster data and store in a dataframe
         coaster_data = []
@@ -694,6 +709,8 @@ class Parser():
         coaster_dataframe = pd.DataFrame(coaster_data, columns=coaster_columns)
         coaster_dataframe.set_axis(coaster_columns, axis=1)
         coaster_dataframe.to_csv("Visited_Coasterlist.csv")
+        # Export to JSON
+        coaster_dataframe.to_json("Visited_Coasterlist.json", orient="records", indent=4)
 
 
     ####################################################
@@ -721,6 +738,33 @@ class Parser():
                 print("    Rides:")
                 for ride in rides:
                     print(f"      - {ride}")
+
+    ####################################################
+    # Test for missing values
+    ####################################################
+    def test_missing_values(csv_file, parks_and_rides):
+        # Load the CSV file into a pandas DataFrame
+        coaster_df = pd.read_csv(csv_file)
+
+        # Normalize park and ride names from the CSV for comparison
+        csv_parks_rides = (
+            coaster_df.groupby("Park")["Name"].apply(list).to_dict()
+        )
+
+        # Compare each park and its coasters in the dictionary
+        for state, parks in Parser.visited_parks_and_rides.items():
+            for park, coasters in parks.items():
+                # Get coasters for the current park from the CSV
+                csv_coasters = csv_parks_rides.get(park, [])
+
+                # Identify missing coasters
+                missing_coasters = [coaster for coaster in coasters if coaster not in csv_coasters]
+
+                # Print results
+                if missing_coasters:
+                    print(f"Missing coasters in {park}, {state}:")
+                    for coaster in missing_coasters:
+                        print(f"  - {coaster}")
 
     ####################################################
     # Parse through a single page of existant coasters

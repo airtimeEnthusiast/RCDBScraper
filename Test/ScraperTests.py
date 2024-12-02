@@ -12,6 +12,7 @@ from RCDB_Scraper import Parser
 
 class MyTestCase(unittest.TestCase):
     #def test_something(self):
+        #Parser.print_visited_parks_and_rides(Parser.visited_parks_and_rides)
         #self.assertEqual(True, True)  # add assertion here
 
     #def test_get_state_pages(self):
@@ -28,10 +29,14 @@ class MyTestCase(unittest.TestCase):
         #state_park_page_one_link = "https://rcdb.com/r.htm?ot=3&ex&ol=1499"
         #print(Parser.get_additional_park_page_links(state_park_page_one_link))
 
-    def test_get_park_coaster_page_links(self):
-        mult_table = "https://rcdb.com/4529.htm" # with multiple ride table
-        one_table = "https://rcdb.com/4627.htm" # with one ride table
-        Parser.get_park_coaster_page_links(mult_table,Parser.visited_parks_and_rides)
+    #def test_get_park_coaster_page_links(self):
+        #mult_table = "https://rcdb.com/4571.htm" # with multiple ride table
+        #one_table = "https://rcdb.com/4627.htm" # with one ride table
+        #Parser.get_park_coaster_page_links(mult_table,Parser.visited_parks_and_rides)
+
+
+    def test_print_missing_values(self):
+        Parser.test_missing_values("Visited_Coasterlist.csv", Parser.visited_parks_and_rides)
 
 
     #def test_get_coaster(self):

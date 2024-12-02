@@ -1,0 +1,308 @@
+[
+    {
+        "Name":"New York, New York Hotel & Casino",
+        "City":"Las Vegas",
+        "State":"Nevada",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1997-01-03",
+        "Link":null
+    },
+    {
+        "Name":"Lagoon",
+        "City":"Farmington",
+        "State":"Utah",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1886-07-15",
+        "Link":null
+    },
+    {
+        "Name":"Belmont Park",
+        "City":"San Diego",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1925-07-04",
+        "Link":null
+    },
+    {
+        "Name":"California's Great America",
+        "City":"Santa Clara",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1976-05-20",
+        "Link":null
+    },
+    {
+        "Name":"Disney California Adventure Park",
+        "City":"Anaheim",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"2001-02-08",
+        "Link":null
+    },
+    {
+        "Name":"Disneyland",
+        "City":"Anaheim",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1955-07-17",
+        "Link":null
+    },
+    {
+        "Name":"Gilroy Gardens Family Theme Park",
+        "City":"Gilroy",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1977",
+        "Link":null
+    },
+    {
+        "Name":"Happy Hollow Park and Zoo",
+        "City":"San Jose",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1961",
+        "Link":null
+    },
+    {
+        "Name":"Knott's Berry Farm",
+        "City":"Buena Park",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1940",
+        "Link":null
+    },
+    {
+        "Name":"Legoland California",
+        "City":"Carlsbad",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1999-03-20",
+        "Link":null
+    },
+    {
+        "Name":"Oakland Zoo",
+        "City":"Oakland",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1922",
+        "Link":null
+    },
+    {
+        "Name":"Pacific Park",
+        "City":"Santa Monica",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1996-05-25",
+        "Link":null
+    },
+    {
+        "Name":"Santa Cruz Beach Boardwalk",
+        "City":"Santa Cruz",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1907-06-22",
+        "Link":null
+    },
+    {
+        "Name":"SeaWorld San Diego",
+        "City":"San Diego",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1964-03-21",
+        "Link":null
+    },
+    {
+        "Name":"Six Flags Discovery Kingdom",
+        "City":"Vallejo",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1986",
+        "Link":null
+    },
+    {
+        "Name":"Six Flags Magic Mountain",
+        "City":"Valencia",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1971-05-29",
+        "Link":null
+    },
+    {
+        "Name":"Universal Studios Hollywood",
+        "City":"Universal City",
+        "State":"California",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1964-06-15",
+        "Link":null
+    },
+    {
+        "Name":"Castles n' Coasters",
+        "City":"Phoenix",
+        "State":"Arizona",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1980",
+        "Link":null
+    },
+    {
+        "Name":"Glenwood Caverns Adventure Park",
+        "City":"Glenwood Springs",
+        "State":"Colorado",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1999",
+        "Link":null
+    },
+    {
+        "Name":"Busch Gardens Tampa",
+        "City":"Tampa",
+        "State":"Florida",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1959-03-31",
+        "Link":null
+    },
+    {
+        "Name":"SeaWorld Orlando",
+        "City":"Orlando",
+        "State":"Florida",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1973-12-15",
+        "Link":null
+    },
+    {
+        "Name":"Universal Studios Florida",
+        "City":"Orlando",
+        "State":"Florida",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1990-06-07",
+        "Link":null
+    },
+    {
+        "Name":"Universal Studios Islands of Adventure",
+        "City":"Orlando",
+        "State":"Florida",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1999-05-28",
+        "Link":null
+    },
+    {
+        "Name":"Walt Disney World - Disney's Animal Kingdom",
+        "City":"Lake Buena Vista",
+        "State":"Florida",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1998-04-22",
+        "Link":null
+    },
+    {
+        "Name":"Walt Disney World - Disney's Hollywood Studios",
+        "City":"Lake Buena Vista",
+        "State":"Florida",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1989-05-01",
+        "Link":null
+    },
+    {
+        "Name":"Silver Dollar City",
+        "City":"Branson",
+        "State":"Missouri",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1960",
+        "Link":null
+    },
+    {
+        "Name":"Nickelodeon Universe Theme Park",
+        "City":"East Rutherford",
+        "State":"New Jersey",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"2019-10-25",
+        "Link":null
+    },
+    {
+        "Name":"Six Flags Great Adventure",
+        "City":"Jackson",
+        "State":"New Jersey",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1974-07-01",
+        "Link":null
+    },
+    {
+        "Name":"Cedar Point",
+        "City":"Sandusky",
+        "State":"Ohio",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1870",
+        "Link":null
+    },
+    {
+        "Name":"Kings Island",
+        "City":"Mason",
+        "State":"Ohio",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1972-04-29",
+        "Link":null
+    },
+    {
+        "Name":"Hersheypark",
+        "City":"Hershey",
+        "State":"Pennsylvania",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1906-05-30",
+        "Link":null
+    },
+    {
+        "Name":"SeaWorld San Antonio",
+        "City":"San Antonio",
+        "State":"Texas",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1988-05-27",
+        "Link":null
+    },
+    {
+        "Name":"Six Flags Fiesta Texas",
+        "City":"San Antonio",
+        "State":"Texas",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1992-03-14",
+        "Link":null
+    },
+    {
+        "Name":"Six Flags Over Texas",
+        "City":"Arlington",
+        "State":"Texas",
+        "Country":"United States",
+        "Status":"Operating",
+        "Status Date":"1961-08-04",
+        "Link":null
+    }
+]
