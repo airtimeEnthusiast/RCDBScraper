@@ -312,10 +312,10 @@ class Parser():
                 # Parse the name
                 stat_sections = soup.find("body").find_all("section")
                 Name = stat_sections[0].select_one("div:nth-child(1)").div.div.h1.get_text(strip=True)
-            except Exception as e:
-                logging.error(f"Error parsing Name: {e}")
                 # Add Link
                 Link = coaster_link
+            except Exception as e:
+                logging.error(f"Error parsing Name: {e}")
 
             try:
                 # Parse location metadata
@@ -424,7 +424,7 @@ class Parser():
     ####################################################
     def parse_park_page(link):
         ## Initialize the stats ##
-        ID = Name = City = State = Country = Status_type = Status_date = Link = None
+        ID = Name = City = State = Country = Status_type = Status_date = None
 
         # Fetch the page
         try:
@@ -478,7 +478,7 @@ class Parser():
             return None
 
         # Return the data array
-        data = [ID, Name, City, State, Country, Status_type, Status_date, Link]
+        data = [ID, Name, City, State, Country, Status_type, Status_date, link]
         logging.info("Parsed park data successfully")
         print(data)
 
